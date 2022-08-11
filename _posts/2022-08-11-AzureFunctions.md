@@ -1,7 +1,7 @@
 ---
 title: PowerShell Azure Functions
 date: 2022-08-11 17:55:01
-categories: [Azure, FunctionApp, PowerShell, Alert, Azure Storage]
+categories: [Azure, FunctionApp]
 tags: [powershell,azure,alert,queue,table]     # TAG names should always be lowercase
 ---
 
