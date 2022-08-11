@@ -7,7 +7,7 @@
 !.husky
 !.commitlintrc.json
 !.versionrc.json
-
+Gemfile.lock
 # bundler cache
 _site
 vendor
