@@ -15,7 +15,7 @@ For this project I've decided to use a System Assigned identity for my Function 
 
 I'll deploy a bicep with the following settings to my Function app:
 
-```Bicep
+```
 resource functionAppSettings 'Microsoft.Web/sites/config@2020-06-01' = {
   parent: functionApp
   name: 'appsettings'
@@ -73,7 +73,7 @@ My function will use the StorageQueueConnection "object" in my function app sett
 The "object" can contain several settings, which you can read more about here <urlForAppSettingsManagedIdentityConnections>.
 
 As you can see, I have no App Setting called "StorageQueueConnection", however I do have the following configuration:
-```bicep
+```
     StorageQueueConnection__credential: 'managedidentity'
     StorageQueueConnection__queueServiceUri: storageAccount.properties.primaryEndpoints.queue
 ```
