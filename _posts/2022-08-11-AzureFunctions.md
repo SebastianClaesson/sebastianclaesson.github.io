@@ -207,15 +207,16 @@ But to keep it short, we'll add the following code to our PowerShell script.
 $mail = @{
     "personalizations" = @(
         @{
-            "to" = @(@{"email" = "user@contoso.com"})
+            "to" = [System.Collections.ArrayList]@(@{"email" = "sebastian.claesson@advania.com"})
         }
     )
     "from"             = @{ 
-        "email" = "user@contoso.com"
+        "email" = "sebastian.claesson@advania.com"
     }        
     "subject"          = "New message!"
     "content"          = @(
         @{
+            "type" = "text"
             "value" = "A new message as put on the queue!"
         }
     )
@@ -227,9 +228,10 @@ Push-OutputBinding -Name message -Value (ConvertTo-Json -InputObject $mail -Dept
 Now the output binding will try to send an api call to SendGrid with our message.
 The simple message will look like this:
 
-![simple-mail](/_images/2022/2022-08-16-1.png){:class="img-responsive"}
+![simple-mail](/_images/2022/2022-08-16-1.png)
 
 To make it more advanced you can also send a html file, if you like to make pretty e-mails :)
+Simply change the change the content-type to "text/html" when posting to the output binding.
 
 Thank you for reading and hopefully my notes will be found useful!
 Feel free to leave feedback either here on my blog or directly to me at any professional social media platform of your choosing.
