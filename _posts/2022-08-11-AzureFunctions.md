@@ -93,7 +93,7 @@ _note that the bicep file is not complete and is missing resources such as the a
 
 Once the infrastructure is in place, you can now create the structure for your function app.
 If you're familiar with zip deployments/function bindings, this will be easy.
-However, if you are not familiar with it, I suggest reading about it at [Zip-deploy](https://docs.microsoft.com/en-us/azure/azure-functions/deployment-zip-push). & [Function Bindings](https://docs.microsoft.com/en-us/azure/azure-functions/functions-triggers-bindings?tabs=powershell)
+However, if you are not familiar with it, I suggest reading about it at [Zip-deploy](https://docs.microsoft.com/en-us/azure/azure-functions/deployment-zip-push) & [Function Bindings](https://docs.microsoft.com/en-us/azure/azure-functions/functions-triggers-bindings?tabs=powershell).
 
 _Brief explaination of the bindings._
 You can specify both in- and output bindings.
