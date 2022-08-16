@@ -207,11 +207,11 @@ But to keep it short, we'll add the following code to our PowerShell script.
 $mail = @{
     "personalizations" = @(
         @{
-            "to" = [System.Collections.ArrayList]@(@{"email" = "sebastian.claesson@advania.com"})
+            "to" = [System.Collections.ArrayList]@(@{"email" = "user@contoso.com"})
         }
     )
     "from"             = @{ 
-        "email" = "sebastian.claesson@advania.com"
+        "email" = "user@contoso.com"
     }        
     "subject"          = "New message!"
     "content"          = @(
