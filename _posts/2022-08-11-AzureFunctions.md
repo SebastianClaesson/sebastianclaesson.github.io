@@ -16,11 +16,59 @@ For this project I've decided to use a System Assigned identity for my Function 
 I'll deploy a bicep with the following settings to my Function app:
 
 ```
+var location = resourceGroup().location
+
+resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
+  name: 'stalertdemo'
+  kind: 'StorageV2'
+  location: location
+  sku: {
+    name: 'Standard_LRS'
+  }
+  properties: {
+    allowBlobPublicAccess: false
+    allowSharedKeyAccess: true
+    accessTier: 'Hot'
+    supportsHttpsTrafficOnly: true
+  }
+}
+
+resource queueService 'Microsoft.Storage/storageAccounts/queueServices@2021-09-01' = {
+  name: 'default'
+  parent: storageAccount
+}
+
+resource sendgrid 'Microsoft.Storage/storageAccounts/queueServices/queues@2021-09-01' = {
+  name: 'sendgrid'
+  parent: queueService
+}
+
+resource tableService 'Microsoft.Storage/storageAccounts/tableServices@2021-09-01' = {
+  name: 'default'
+  parent: storageAccount
+}
+
+resource keyvault 'Microsoft.KeyVault/vaults@2021-10-01' = {
+  name: 'alertdemo-kv'
+  location: location
+  properties: {
+    enabledForDeployment: false
+    enabledForDiskEncryption: false
+    enabledForTemplateDeployment: false
+    enableRbacAuthorization: true
+    enableSoftDelete: false
+    tenantId: subscription().tenantId
+    sku: {
+      name: 'standard'
+      family: 'A'
+    }
+  }
+}
+
 resource functionAppSettings 'Microsoft.Web/sites/config@2020-06-01' = {
   parent: functionApp
   name: 'appsettings'
   properties: {
-    APPLICATIONINSIGHTS_CONNECTION_STRING: reference(appInsights.id, '2020-02-02').ConnectionString
     AzureWebJobsDisableHomepage: 'true'
     AzureWebJobsSecretStorageKeyVaultUri: keyvault.properties.vaultUri
     AzureWebJobsSecretStorageType: 'keyvault'
@@ -35,21 +83,22 @@ resource functionAppSettings 'Microsoft.Web/sites/config@2020-06-01' = {
 }
 ```
 
-With these app settings my function app will now:
-1) Store secrets in keyvault (such as the master/function keys) using the managed identity.
-2) Create a Storage queue connection object that will use my Storage Accounts queue endpoint and connect to that using the managed identity.
+The bicep file will now create/configure:
+1) Create a Azure Storage Account with queue and table services enabled. 
+2) Create a queue called sendgrid
+3) Store secrets in keyvault (such as the master/function keys) using the managed identity.
+4) Create a Storage queue connection object that will use my Storage Accounts queue endpoint and connect to that using the managed identity.
 
-In order to have the keyvault integration, you'll need to assign the correct permissions for the identity to read/write secrets.
-This can be acheived with bicep, powershell or az cli.
+_note that the bicep file is not complete and is missing resources such as the app plan, function app, role assignments etc. This just demonstration of how to set the application settings_
 
 Once the infrastructure is in place, you can now create the structure for your function app.
-If you're familiar with function bindings, this will be easy.
-However, if you are not familiar with it, I suggest reading about it at <hereurl>.
+If you're familiar with zip deployments/function bindings, this will be easy.
+However, if you are not familiar with it, I suggest reading about it at [Zip-deploy](https://docs.microsoft.com/en-us/azure/azure-functions/deployment-zip-push). & [Function Bindings](https://docs.microsoft.com/en-us/azure/azure-functions/functions-triggers-bindings?tabs=powershell)
 
 _Brief explaination of the bindings._
 You can specify both in- and output bindings.
-There's precompiled bindings that you can use from the open source community or used by the function runtime bundle.
-Read more about the runtime bundle <here>.
+There's bindings that you can use from the open source community or included in the function runtime.
+Read more about the runtime [extension bundle](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-register#extension-bundles).
 
 In my scenario, I'll create a input binding that uses the Azure Storage Queue trigger.
 For my function it will have a function.json in it's folder, containing the following configuration:
@@ -68,9 +117,9 @@ For my function it will have a function.json in it's folder, containing the foll
 ```
 
 As you can see there's a queueTrigger called "QueueItem".
-It also has a queueName, which is the Storage Accounts queue name and a connection name.
-My function will use the StorageQueueConnection "object" in my function app settings, as we specified in the bicep above.
-The "object" can contain several settings, which you can read more about here <urlForAppSettingsManagedIdentityConnections>.
+It also has a queueName, which is the name of the queue and a connection name.
+The binding will use the StorageQueueConnection "object" specified in my function app settings to retrieve the connectionstring/settings, as we specified in the bicep above.
+The "object" can contain several settings, which you can read more about here [Common properties for identity based connections](https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference?tabs=blob#common-properties-for-identity-based-connections) & [Connecting to host storage with an identity (Preview)](https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference?tabs=blob#connecting-to-host-storage-with-an-identity-preview).
 
 As you can see, I have no App Setting called "StorageQueueConnection", however I do have the following configuration:
 ```
@@ -106,7 +155,7 @@ For our Function app, we'll use the following configuration:
 ```
 
 This will configure our app to check the queue every 2 second.
-More about this can be found here <url to read about extension settings>.
+More about this can be found here [queue extension settings](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-queue?tabs=in-process%2Cextensionv5%2Cextensionv3&pivots=programming-language-powershell).
 
 After adding some PowerShell magic to our function app it will now parse the data passed down by the queue to the function.
 ```PowerShell
@@ -144,8 +193,8 @@ To enable the output binding for SendGrid we will have to go back to our functio
 ```
 Now as you can see, we have added a new output binding of the type sendGrid in the out direction.
 We'll give it the name message.
-To understand how the sendGrid output binding works, we can read the help docs at <SendGridHelpDocs>.
-To get your API key you can read more here: <SendGridApiKey>.
+To understand how the sendGrid output binding works, we can read the help docs at [SendGrid configuration](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-sendgrid?tabs=in-process%2Cfunctionsv2&pivots=programming-language-powershell#configuration).
+To get your API key and getting started with SendGrid, you can read more here: [SendGrid - Getting started](https://www.twilio.com/blog/send-emails-csharp-dotnet-with-azure-functions-and-sendgrid-bindings).
 I strongly suggest that you keep this secret inside of an Azure Keyvault and have a reference to it inside your function app setting.
 
 But to keep it short, we'll add the following code to our PowerShell script.
