@@ -87,7 +87,7 @@ The bicep file will now create/configure:
 1) Create a Azure Storage Account with queue and table services enabled. 
 2) Create a queue called sendgrid
 3) Store secrets in keyvault (such as the master/function keys) using the managed identity.
-4) Create a Storage queue connection object that will use my Storage Accounts queue endpoint and connect to that using the managed identity.
+4) Create a StorageQueueConnection object that will use my Storage Accounts queue endpoint and connect to that using the managed identity.
 
 _note that the bicep file is not complete and is missing resources such as the app plan, function app, role assignments etc. This just demonstration of how to set the application settings_
 
