@@ -237,6 +237,5 @@ To make it more advanced you can also send a html file, if you like to make pret
 Simply change the change the content-type to "text/html" when posting to the output binding.
 
 Thank you for reading and hopefully my notes will be found useful!
-Feel free to leave feedback either here on my blog or directly to me at any professional social media platform of your choosing.
 
 //Sebastian
