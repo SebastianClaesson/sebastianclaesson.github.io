@@ -217,7 +217,7 @@ $mail = @{
     "content"          = @(
         @{
             "type" = "text"
-            "value" = "A new message as put on the queue!"
+            "value" = "A new message was put on the queue!"
         }
     )
 }
