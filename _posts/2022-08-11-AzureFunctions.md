@@ -8,7 +8,7 @@ tags: [powershell,azure,alert,queue,table]     # TAG names should always be lowe
 I've been playing around a little with Azure Functions and Azure Alerting.
 The design was to be able to utilize the Azure Alert rule processing function in Azure and have it create a prettier mail than what comes out of box.
 
-Basically the design boiled down to having a few Azure Functions, A Storage Account with Tables and Queues a long with some PowerShell Magic :)
+Basically the design boiled down to having a few PowerShell Azure Functions, A Storage Account with Tables and Queues.
 
 First of all we'll need a Function app with a managed identity.
 For this project I've decided to use a System Assigned identity for my Function app.
@@ -95,10 +95,11 @@ Once the infrastructure is in place, you can now create the structure for your f
 If you're familiar with zip deployments/function bindings, this will be easy.
 However, if you are not familiar with it, I suggest reading about it at [Zip-deploy](https://docs.microsoft.com/en-us/azure/azure-functions/deployment-zip-push) & [Function Bindings](https://docs.microsoft.com/en-us/azure/azure-functions/functions-triggers-bindings?tabs=powershell).
 
-_Brief explaination of the bindings._
-You can specify both in- and output bindings.
+**_Brief explaination of the bindings._**
+
+_You can specify both in- and output bindings.
 There's bindings that you can use from the open source community or included in the function runtime.
-Read more about the runtime [extension bundle](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-register#extension-bundles).
+Read more about the runtime [extension bundle](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-register#extension-bundles)._
 
 In my scenario, I'll create a input binding that uses the Azure Storage Queue trigger.
 For my function it will have a function.json in it's folder, containing the following configuration:
@@ -116,17 +117,20 @@ For my function it will have a function.json in it's folder, containing the foll
 }
 ```
 
-As you can see there's a queueTrigger called "QueueItem".
-It also has a queueName, which is the name of the queue and a connection name.
-The binding will use the StorageQueueConnection "object" specified in my function app settings to retrieve the connectionstring/settings, as we specified in the bicep above.
+As you can see there's a queueTrigger binding called "QueueItem".
+
+It also has a queueName which is the name of the queue, and a connection.
+
+The binding will use the StorageQueueConnection "object" specified in my function app settings to retrieve the connection, as we specified in the bicep template.
+
 The "object" can contain several settings, which you can read more about here [Common properties for identity based connections](https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference?tabs=blob#common-properties-for-identity-based-connections) & [Connecting to host storage with an identity (Preview)](https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference?tabs=blob#connecting-to-host-storage-with-an-identity-preview).
 
-As you can see, I have no App Setting called "StorageQueueConnection", however I do have the following configuration:
+As you can see, I have no App Setting called "StorageQueueConnection", however I do have the following app settings:
 ```
     StorageQueueConnection__credential: 'managedidentity'
     StorageQueueConnection__queueServiceUri: storageAccount.properties.primaryEndpoints.queue
 ```
-
+Together these app settings form the connection object.
 When the runtime is running a sync cycle, it will try and parse my settings that is prefixed with "StorageQueueConnection" and followed by two underscores.
 In my case, it will try to connect to my Azure Storage Account Queue endpoint using the Function app managed identity.
 
