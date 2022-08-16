@@ -200,9 +200,14 @@ To enable the output binding for SendGrid we will have to go back to our functio
 ```
 Now as you can see, we have added a new output binding of the type sendGrid in the out direction.
 We'll give it the name message.
+
 To understand how the sendGrid output binding works, we can read the help docs at [SendGrid configuration](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-sendgrid?tabs=in-process%2Cfunctionsv2&pivots=programming-language-powershell#configuration).
-To get your API key and getting started with SendGrid, you can read more here: [SendGrid - Getting started](https://www.twilio.com/blog/send-emails-csharp-dotnet-with-azure-functions-and-sendgrid-bindings).
-I strongly suggest that you keep this secret inside of an Azure Keyvault and have a reference to it inside your function app setting.
+
+> To get your API key and getting started with SendGrid, you can read more here: [SendGrid - Getting started](https://www.twilio.com/blog/send-emails-csharp-dotnet-with-azure-functions-and-sendgrid-bindings).
+{: .prompt-info }
+
+> I strongly suggest that you keep this secret inside of an Azure Keyvault and have a reference to it inside your function app setting.
+{: .prompt-tip }
 
 But to keep it short, we'll add the following code to our PowerShell script.
 
