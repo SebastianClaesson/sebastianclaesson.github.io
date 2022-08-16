@@ -236,6 +236,8 @@ The simple message will look like this:
 To make it more advanced you can also send a html file, if you like to make pretty e-mails :)
 Simply change the change the content-type to "text/html" when posting to the output binding.
 
+![html-mail](/assets/images/2022/2022-08-16-2.png)
+
 Thank you for reading and hopefully my notes will be found useful!
 
 //Sebastian
