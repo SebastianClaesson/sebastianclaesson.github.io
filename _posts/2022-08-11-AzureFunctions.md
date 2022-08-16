@@ -8,7 +8,7 @@ tags: [powershell,azure,alert,queue,table]     # TAG names should always be lowe
 I've been playing around a little with Azure Functions and Azure Alerting.
 The design was to be able to utilize the Azure Alert rule processing function in Azure and have it create a prettier mail than what comes out of box.
 
-Basically the design boiled down to having a few PowerShell Azure Functions, A Storage Account with Tables and Queues.
+Basically the design boiled down to having a few Azure Functions running a bit of PowerShell and a storage account with some tables and queues.
 
 First of all we'll need a Function app with a managed identity.
 For this project I've decided to use a System Assigned identity for my Function app.
@@ -65,6 +65,39 @@ resource keyvault 'Microsoft.KeyVault/vaults@2021-10-01' = {
   }
 }
 
+resource appServicePlan 'Microsoft.Web/serverfarms@2020-12-01' = {
+  name: 'alertdemo-plan'
+  location: location
+  sku: {
+    tier: 'Dynamic'
+    name: 'Y1'
+  }
+}
+
+resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
+  name: 'alertdemo-app'
+  location: location
+  kind: 'functionapp'
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties: {
+    serverFarmId: appServicePlan.id
+    httpsOnly: true
+    clientAffinityEnabled: false
+    siteConfig: {
+      cors: {
+        allowedOrigins: [
+          'https://azure.portal.com'
+        ]
+      }
+      powerShellVersion: '7.2'
+      netFrameworkVersion: 'v6.0'
+      ftpsState: 'Disabled'
+    }
+  }
+}
+
 resource functionAppSettings 'Microsoft.Web/sites/config@2020-06-01' = {
   parent: functionApp
   name: 'appsettings'
@@ -89,14 +122,14 @@ The bicep file will now create/configure:
 3. Store secrets in keyvault (such as the master/function keys) using the managed identity.
 4. Create a StorageQueueConnection object that will use my Storage Accounts queue endpoint and connect to that using the managed identity.
 
-> The bicep file is not complete and is missing resources such as the app plan, function app, role assignments etc. This just demonstration of how to set the application settings.
+> The bicep file is not complete and is missing resources such as role assignments etc. This just a demonstration of how to set the application settings.
 {: .prompt-info }
 
 Once the infrastructure is in place, you can now create the structure for your function app.
 If you're familiar with zip deployments/function bindings, this will be easy.
-However, if you are not familiar with it, I suggest reading about it at [Zip-deploy](https://docs.microsoft.com/en-us/azure/azure-functions/deployment-zip-push) & [Function Bindings](https://docs.microsoft.com/en-us/azure/azure-functions/functions-triggers-bindings?tabs=powershell).
+However, if you are not familiar with it, I suggest reading about it at [Zip-deploy](https://docs.microsoft.com/en-us/azure/azure-functions/deployment-zip-push) & [Function Triggers and Bindings](https://docs.microsoft.com/en-us/azure/azure-functions/functions-triggers-bindings?tabs=powershell).
 
-**_Brief explaination of the bindings._**
+**_Brief explaination of the triggers/bindings._**
 
 _You can specify both in- and output bindings.
 There's bindings that you can use from the open source community or included in the function runtime.
@@ -239,8 +272,8 @@ The simple message will look like this:
 
 ![simple-mail](/assets/images/2022/2022-08-16-1.png)
 
-To make it more advanced you can also send a html file, if you like to make pretty e-mails :)
-Simply change the change the content-type to "text/html" when posting to the output binding.
+To make it more advanced you can also send a html file, in my case I'll use a html template file with some placeholders which we'll search and replace during runtime and using the information passed down by the message.
+Simply change the change the content-type to "text/html" when posting to the output binding, if you like pretty mails :)
 
 ![html-mail](/assets/images/2022/2022-08-16-2.png)
 
