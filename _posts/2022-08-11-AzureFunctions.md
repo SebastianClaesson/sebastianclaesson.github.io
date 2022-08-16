@@ -89,7 +89,8 @@ The bicep file will now create/configure:
 3) Store secrets in keyvault (such as the master/function keys) using the managed identity.
 4) Create a StorageQueueConnection object that will use my Storage Accounts queue endpoint and connect to that using the managed identity.
 
-_note that the bicep file is not complete and is missing resources such as the app plan, function app, role assignments etc. This just demonstration of how to set the application settings_
+> The bicep file is not complete and is missing resources such as the app plan, function app, role assignments etc. This just demonstration of how to set the application settings.
+{: .prompt-info }
 
 Once the infrastructure is in place, you can now create the structure for your function app.
 If you're familiar with zip deployments/function bindings, this will be easy.
