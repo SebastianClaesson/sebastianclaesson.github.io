@@ -134,7 +134,8 @@ Together these app settings form the connection object.
 When the runtime is running a sync cycle, it will try and parse my settings that is prefixed with "StorageQueueConnection" and followed by two underscores.
 In my case, it will try to connect to my Azure Storage Account Queue endpoint using the Function app managed identity.
 
-_In order for this to work, you'll have to make sure that the managed identity has at least the Storage Queue Data Contributor role._
+> In order for this to work, you'll have to make sure that the managed identity has at least the Storage Queue Data Contributor role.
+{: .prompt-info }
 
 The configuration for the Azure Storage Account Queue settings can be set in the host.json file for the Function app.
 For our Function app, we'll use the following configuration:
@@ -162,7 +163,7 @@ This will configure our app to check the queue every 2 second.
 More about this can be found here [queue extension settings](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-queue?tabs=in-process%2Cextensionv5%2Cextensionv3&pivots=programming-language-powershell).
 
 After adding some PowerShell magic to our function app it will now parse the data passed down by the queue to the function.
-```PowerShell
+```powershell
 using namespace System.Net
 # Input bindings are passed in via param block.
 param($QueueItem, $TriggerMetadata)
@@ -170,13 +171,15 @@ Write-Information "Queue item insertion time: $($TriggerMetadata.InsertionTime)"
 Write-Information $QueueItem
 ```
 
-_The parameter must match the name set in the function.json file, in our case 'QueueItem'_
+> The parameter must match the name set in the function.json file, in our case 'QueueItem'
+{: .prompt-info }
+
 This PowerShell script will only output the insertion time and the data of the message found in the queue.
 
 We will make it more interesting in our case, and add a new output binding for SendGrid.
 To enable the output binding for SendGrid we will have to go back to our function.json file and add the following rows:
 
-```Json
+```json
 {
   "bindings": [
     {
@@ -203,7 +206,7 @@ I strongly suggest that you keep this secret inside of an Azure Keyvault and hav
 
 But to keep it short, we'll add the following code to our PowerShell script.
 
-```PowerShell
+```powershell
 $mail = @{
     "personalizations" = @(
         @{
