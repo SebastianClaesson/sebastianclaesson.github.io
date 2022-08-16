@@ -227,7 +227,7 @@ Push-OutputBinding -Name message -Value (ConvertTo-Json -InputObject $mail -Dept
 Now the output binding will try to send an api call to SendGrid with our message.
 The simple message will look like this:
 
-<Picture>
+![simple-mail](/_images/2022/2022-08-16-1.png){:class="img-responsive"}
 
 To make it more advanced you can also send a html file, if you like to make pretty e-mails :)
 
