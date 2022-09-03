@@ -50,6 +50,6 @@ This is a great feature if you want to gather output in groups, making it easier
 
 As I stated in the start, I've used this to build my own custom what-if deployment to render the Azure DevOps pipeline output humanly readable.
 
-I'll create a blogpost series on that but for now the code for the cemo pipeline and PowerShell function can be found on my github: https://github.com/SebastianClaesson/AzureDevopsPipelineColorDemo
+I'll create a blogpost series on that but for now the code for the cemo pipeline and PowerShell function can be found on my github: [SebastianClaesson - AzureDevOpsPipelineDemo](https://github.com/SebastianClaesson/AzureDevopsPipelineColorDemo)
 
 A big thanks for reading and feel free to drop any comments below!
