@@ -12,7 +12,7 @@ There's a built-in commands in Azure DevOps that can be used to produce colored 
 Read more here: [Azure DevOps Formatting Commands](https://docs.microsoft.com/en-us/azure/devops/pipelines/scripts/logging-commands?view=azure-devops&tabs=powershell#formatting-commands)
 
 These formatting commands are great! The output renders such as:
-![Azure DevOps formatting commands](/assets/images/2022/2022-09-03-2.png)
+![Azure DevOps formatting commands](/assets/images/2022/2022-09-03-2.PNG)
 
 This acheives what we would like to see, however there's only one little annoying thing, that is that there's no informational (or success/verbose) command that we can use.
 
@@ -20,7 +20,7 @@ The green output is called "Section", which does not start with the ##[section] 
 
 The first thought that came to mind is that perhaps the [write-host command with ForegroundColor](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/write-host?view=powershell-7.2#example-4-write-with-different-text-and-background-colors) might do the trick.
 However the render output from that command in Azure DevOps ends up like this:
-![write-host](/assets/images/2022/2022-09-03-1.png)
+![write-host](/assets/images/2022/2022-09-03-1.PNG)
 Which is not what we were looking for.
 
 I decided to test if the ANSI color codes would be render as documented here: [ANSI Colors](https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit).
@@ -32,14 +32,14 @@ steps:
     Write-output $FormattedString
 ```
 And checking the rendered output in Azure DevOps you can see the following:
-![ANSI Output](/assets/images/2022/2022-09-03-3.png)
+![ANSI Output](/assets/images/2022/2022-09-03-3.PNG)
 We can see that it says 'Testing' in green!
 Checking the raw log we can also see this:
-![ANSI Output - Raw log](/assets/images/2022/2022-09-03-4.png)
+![ANSI Output - Raw log](/assets/images/2022/2022-09-03-4.PNG)
 This means that the Azure DevOps portal do render ANSI colors, which is great!
 
 After reviewing the wikipedia page regarding ANSI colors, we can also see that if we increase each color code by 10, it should also hight light the text with the color as a background color.
-![Azure DevOps background and foreground colored](/assets/images/2022/2022-09-03-5.png)
+![Azure DevOps background and foreground colored](/assets/images/2022/2022-09-03-5.PNG)
 
 Seems we're onto something! 
 
