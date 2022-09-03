@@ -8,7 +8,7 @@ tags: [powershell,azure devops,output,ansi,color,pipeline]     # TAG names shoul
 
 I wanted to create my custom [What-if deployment - PowerShell](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/deploy-what-if?tabs=azure-powershell) as there is an issue with the Azure Firewall rules being scrambled and giving false-positives for changes at each run, rendering the output almost unreadable.
 
-There's a built-in commands in Azure DevOps that can be used to produce colored output, sections and groups.
+There's built-in commands in Azure DevOps that can be used to produce colored output, sections and groups.
 Read more here: [Azure DevOps Formatting Commands](https://docs.microsoft.com/en-us/azure/devops/pipelines/scripts/logging-commands?view=azure-devops&tabs=powershell#formatting-commands)
 
 These formatting commands are great! The output renders such as:
@@ -16,15 +16,15 @@ These formatting commands are great! The output renders such as:
 
 This acheives what we would like to see, however there's only one little annoying thing, that is that there's no informational (or success/verbose) command that we can use.
 
-The green output is called "Section", which does not start with the ##[section] which makes it harder to read in the log output of Azure DevOps in my opinion. I would simply like to have my error text in the color of my choosing and without any prefixes.
+The green output is called "Section", which does not start with the ##[section] which makes it harder to read in the log output of Azure DevOps in my opinion, or if we could remove the ##[error] / ##[warning] of the orange/red outputs. I would simply like to have my error text in the color of my choosing and without any prefixes.
 
 The first thought that came to mind is that perhaps the [write-host command with ForegroundColor](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/write-host?view=powershell-7.2#example-4-write-with-different-text-and-background-colors) might do the trick.
-However the render output from that command in Azure DevOps ends up like this:
+However the rendered output from that command in Azure DevOps ends up like this:
 ![write-host](/assets/images/2022/2022-09-03-1.PNG)
 Which is not what we were looking for.
 
-I decided to test if the ANSI color codes would be render as documented here: [ANSI Colors](https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit).
-To test this out, we create a yaml pipeline for example the one below.
+I decided to test if the ANSI color codes would be rendered as documented here: [ANSI Colors](https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit).
+To test this out, we create a yaml pipeline, as an example, the one below.
 ```yaml
 steps:
 - pwsh: |
@@ -38,7 +38,7 @@ Checking the raw log we can also see this:
 ![ANSI Output - Raw log](/assets/images/2022/2022-09-03-4.PNG)
 This means that the Azure DevOps portal do render ANSI colors, which is great!
 
-After reviewing the wikipedia page regarding ANSI colors, we can also see that if we increase each color code by 10, it should also hight light the text with the color as a background color.
+After reviewing the wikipedia page regarding ANSI colors, we can also see that if we increase each color code by 10, it should also highlight the text with the color as a background color.
 ![Azure DevOps background and foreground colored](/assets/images/2022/2022-09-03-5.PNG)
 
 Seems we're onto something! 
