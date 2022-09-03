@@ -1,8 +1,8 @@
 ---
 title: Azure DevOps Pipeline Output
-date: 2022-09-03 06:55:01
+date: 2022-09-03 06:55:00
 categories: [Azure DevOps, Colored Output]
-tags: [powershell,azure devops,output,ascii,color,pipeline]     # TAG names should always be lowercase
+tags: [powershell,azure devops,output,ansi,color,pipeline]     # TAG names should always be lowercase
 ---
 ### Ever thought about visualising the output of your pipeline with color in Azure DevOps?
 
