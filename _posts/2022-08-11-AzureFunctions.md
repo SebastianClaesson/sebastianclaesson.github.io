@@ -1,5 +1,5 @@
 ---
-title: PowerShell Azure Functions
+title: PowerShell Azure Function - Managed identity & triggers/bindings
 date: 2022-08-11 14:55:00
 categories: [Azure, FunctionApp]
 tags: [powershell,azure,alert,queue,table,identity,managed identity,function]     # TAG names should always be lowercase
