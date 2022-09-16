@@ -2,7 +2,7 @@
 title: PowerShell Azure Functions
 date: 2022-08-11 14:55:00
 categories: [Azure, FunctionApp]
-tags: [powershell,azure,alert,queue,table]     # TAG names should always be lowercase
+tags: [powershell,azure,alert,queue,table,identity,managed identity,function]     # TAG names should always be lowercase
 ---
 
 I've been playing around a little with Azure Functions and Azure Alerting.
