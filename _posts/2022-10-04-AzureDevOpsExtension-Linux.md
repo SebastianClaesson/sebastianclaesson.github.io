@@ -154,11 +154,9 @@ If you want to see more details about the VM Extension download, you can find it
 2022-11-04T08:55:06.192513Z INFO ExtHandler [Microsoft.VisualStudio.Services.TeamServicesAgentLinux-1.22.0.0] Update settings file: 266.settings
 2022-11-04T08:55:06.192717Z INFO ExtHandler [Microsoft.VisualStudio.Services.TeamServicesAgentLinux-1.22.0.0] Install extension [Handler.sh]
 ```
->  As you can see in the log above, this is where the settings file is generated.
-
-The path of the settings file: /var/lib/waagent/Microsoft.VisualStudio.Services.TeamServicesAgentLinux-<versionnumber>/config/<uniquenumber>.settings
-
-The settings files contains the ProtectedSettings and Settings attribute of the extension.
+>  As you can see in the log above, this is where the settings file is generated.<br/>
+The path of the settings file: /var/lib/waagent/Microsoft.VisualStudio.Services.TeamServicesAgentLinux-<versionnumber>/config/<uniquenumber>.settings<br/>
+The settings files contains the ProtectedSettings and Settings attribute of the extension.<br/>
 {: .prompt-info }
 
 Once you have allowed the Azure DevOps VM extension to download itself, then the next problem will be that the Azure DevOps VM Extension itself is not proxy aware and fail when trying to download the agent zip and enable agent script.
