@@ -277,6 +277,7 @@ The path of the settings file:
 
 The settings files contains the ProtectedSettings and Settings attribute of the extension, meaning the the token/JWT is available inside of the file.
 If you want to decrypt it manually, it is possible by using the Python module "HandlerUtil.py" as it contains a function to decode the settings using the computer certificate.
+
 The code for it:
 ``` python
 _parse_config(self, ctxt, operation):
