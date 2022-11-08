@@ -29,7 +29,7 @@ description: >-                        # used by seo meta and the atom feed
   A techblog about Azure, PowerShell and automation.
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
-url: 'https://sebastianclaesson.github.io' # 'https://blog.sebastianclaesson.se's
+url: 'https://blog.sebastianclaesson.se' # 'https://blog.sebastianclaesson.se's
 
 github:
   username: SebastianClaesson            # change to your github username
