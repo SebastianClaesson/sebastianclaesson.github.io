@@ -342,6 +342,7 @@ Acquire::http::Proxy "http://10.2.0.7:3128";
 ```
 This can either be done by the CustomScript extension or as part of a golden image capturing.
 Once all of these configurations have been set in place, then you will successfully be able to use your proxy and reach Azure DevOps/APT.
+Meaning the agent can now download the files needed, call home to Azure DevOps and download the dependencies needed to install successfully.
 
 I hope this helps to cast some clarity on how the Azure DevOps agent extension works and how it can be used behind a proxy.
 Thank you for reading!
