@@ -33,10 +33,10 @@ However the NSG will not interrupt web traffic within the virtual network.
 {: .prompt-info }
 
 The first thing we will have to do is to create the Bicep template.
+
 {::options parse_block_html="true" /}
 
-<details><summary markdown="span"><b>VMSS Bicep Template Example</b></summary>
-
+<details><summary markdown="span">VMSS Bicep Template Example</summary>
 ``` plaintext
 var location = resourceGroup().location
 var AzureDevOpsPATToken = 'AzureDevOpsPATToken'
@@ -127,7 +127,7 @@ resource vmss 'Microsoft.Compute/virtualMachineScaleSets@2022-03-01' = {
 }
 ```
 </details>
-<br/>
+
 >  Currently rouge do not support Bicep syntax highlighting. 
 If you would like to see Bicep hightlighting, then please up-vote [Rouge Bicep Hightlighting](https://github.com/rouge-ruby/rouge/issues/1887) at GitHub.
 {: .prompt-info }
