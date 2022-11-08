@@ -137,9 +137,13 @@ Read more about that here: [Microsoft.Compute/virtualMachines/extensions](https:
 {: .prompt-info }
 
 The first issue we will encounter is that the Azure DevOps Extension will fail it's installation.
+
 This is because the Azure DevOps VM Extension cannot be downloaded, The extension is hosted on Microsoft generated storage accounts.
+
 In my case the url was: https://umsaqts1kdw3dgdrdmzt.blob.core.windows.net/76d90c30-c607-43bc-49aa-02e322a01e7b/76d92c30-c607-43bc-49aa-32e322a01e7b_1.22.0.0.zip
+
 If you want to see more details about the VM Extension download, you can find it at /var/log/azure/Microsoft.VisualStudio.Services.TeamServicesAgentLinux/CommandExecution.log
+
 *Example log of a successful download:*
 ``` text
 2022-11-04T08:55:06.150100Z INFO ExtHandler [Microsoft.VisualStudio.Services.TeamServicesAgentLinux-1.22.0.0] Target handler state: enabled [incarnation_1]
@@ -151,12 +155,16 @@ If you want to see more details about the VM Extension download, you can find it
 2022-11-04T08:55:06.192717Z INFO ExtHandler [Microsoft.VisualStudio.Services.TeamServicesAgentLinux-1.22.0.0] Install extension [Handler.sh]
 ```
 >  As you can see in the log above, this is where the settings file is generated.
+
 The path of the settings file: /var/lib/waagent/Microsoft.VisualStudio.Services.TeamServicesAgentLinux-<versionnumber>/config/<uniquenumber>.settings
+
 The settings files contains the ProtectedSettings and Settings attribute of the extension.
 {: .prompt-info }
 
 Once you have allowed the Azure DevOps VM extension to download itself, then the next problem will be that the Azure DevOps VM Extension itself is not proxy aware and fail when trying to download the agent zip and enable agent script.
+
 Looking at the code for the Azure DevOps Extension, we can see on row 596 in the AzureRM.py that it will try to run the command: "Util.url_retrieve(downloadUrl, agentFile)".
+
 The downloadUrl and agentFile is defined in the VM Extension part of your scale-set.
 ``` plaintext
 {
@@ -182,6 +190,7 @@ The downloadUrl and agentFile is defined in the VM Extension part of your scale-
 }
 ```
 The Util library is imported from the Utils/HandlerUtil.py module.
+
 The url_retrieve function contains the following bit of code:
 ``` python
 def url_retrieve(download_url, target):
@@ -195,6 +204,7 @@ def url_retrieve(download_url, target):
 Which suggests that the function should be retreiving the proxy settings, if ProxyUrl is defined in "proxy_config".
 
 Going back to the AzureRM.py script, we can see that the proxy_config is imported as 'from Utils.GlobalSettings import proxy_config'.
+
 Reading the GlobalSettings.py file we can see that it contains the following:
 ``` python
 proxy_config = {}
@@ -203,8 +213,10 @@ However, there is no function where this file gets populated on the fly dependin
 > Looking at the urllib documentation [urllib docs](https://docs.python.org/3/library/urllib.request.html) we can see that it supports a function of getting the proxy settings "request.getproxies()", but as part of the code it is not implemented.
 {: .prompt-info }
 
-As we cannot have the Extension to understand the use of proxy, we can we can edit the path for agentDownloadUrl and enableScriptDownloadUrl to be hosted on a Azure Storage Account with a private endpoint in the same virtual network as the VMSS.
-This will allow the Azure DevOps Extension to download these files without a web proxy (as we are allowed to send web traffic within our virtual network without having the traffic dropped.)
+As we cannot make the Extension understand that it should use a proxy, we can edit the path for agentDownloadUrl and enableScriptDownloadUrl to be hosted on a Azure Storage Account with a private endpoint in the same virtual network as the VMSS.
+
+This will allow the Azure DevOps Extension to download these files without a web proxy.
+As we are allowed to send web traffic within our virtual network without having the traffic dropped.
 ``` plaintext
 {
     name: 'Microsoft.Azure.DevOps.Pipelines.Agent'
@@ -228,7 +240,8 @@ This will allow the Azure DevOps Extension to download these files without a web
     }
 }
 ```
-Once you have successfully updated the extension settings, you can now read the log file @ /agent/_diag/Agent_<timestamp>-utc.log which contains the following rows that identifies that we have set the proxy correctly.
+Once you have successfully updated the extension settings, you can now read the log file @ /agent/_diag/Agent_timestamp-utc.log which contains the following rows that identifies that we have set the proxy correctly.
+
 *Correct setup.*
 ``` text
 [2022-11-04 08:23:39Z INFO AgentProcess] Arguments parsed
@@ -251,13 +264,53 @@ Once you have successfully updated the extension settings, you can now read the 
 [2022-11-04 07:48:33Z INFO VstsAgentWebProxy] No proxy setting found.
 ```
 Now you Azure DevOps agent can identify and report back to Azure DevOps correctly!
-However as the Azure DevOps agent also needs to install tools that might not exist on the machine, we will have to set the APT proxy as well.
-There's different ways of setting the apt proxy, however to keep it simple I have chosen to create the apt.conf file at /etc/apt with the content:
-``` text
-Acquire::http::Proxy "http://10.2.0.7:3128";
-```
-This can either be done by the CustomScript extension or as part of a golden image capturing.
 
+Maybe now you have started to wonder - I have issued an Azure DevOps token, where and how is it stored?
+
+Well, to make it simple, the token is used to issue a JWT towards Azure DevOps.
+
+The JWT issued is only valid for a short time and can be used to report back as a healthy agent to Azure DevOps.
+
+The settings file will be inserted into the VM/instance you are running and available on disk.
+If you want to decrypt it manually, it is possible by using the Python module "HandlerUtil.py" as it contains a function to decode the settings using the computer certificate.
+The code for it:
+``` python
+_parse_config(self, ctxt, operation):
+        config = None
+        try:
+            config=json.loads(ctxt)
+        except:
+            self.error('JSON exception decoding ' + ctxt)
+
+        if config == None:
+            self.error("JSON error processing settings file:" + ctxt)
+        else:
+            handlerSettings = config['runtimeSettings'][0]['handlerSettings']
+            if 'protectedSettings' in handlerSettings and \
+                    "protectedSettingsCertThumbprint" in handlerSettings and \
+                    handlerSettings['protectedSettings'] is not None and \
+                    handlerSettings['protectedSettings'] != '' and \
+                    handlerSettings["protectedSettingsCertThumbprint"] is not None:
+                protectedSettings = handlerSettings['protectedSettings']
+                thumb=handlerSettings['protectedSettingsCertThumbprint']
+                cert=waagent.LibDir+'/'+thumb+'.crt'
+                pkey=waagent.LibDir+'/'+thumb+'.prv'
+                waagent.SetFileContents('/tmp/kk', protectedSettings)
+                cleartxt=None
+                cleartxt=waagent.RunGetOutput("base64 -d /tmp/kk | openssl smime  -inform DER -decrypt -recip " +  cert + "  -inkey " + pkey )[1]
+                os.remove("/tmp/kk")
+                if cleartxt == None:
+                    self.error("OpenSSh decode error using  thumbprint " + thumb )
+                    self.do_exit(1,operation,'error','1', operation + ' Failed')
+                jctxt=''
+                try:
+                    jctxt=json.loads(cleartxt)
+                except:
+                    self.error('JSON exception decoding ' + cleartxt)
+                handlerSettings['protectedSettings']=jctxt
+                self.log('Config decoded correctly.')
+        return config
+```
 *Example of settings file on disk.*
 ``` json
 {
@@ -283,5 +336,13 @@ This can be intercepted in various ways, if you are interested to read the setti
 Part of the protected settings contains a JWT for the agent to authenticate to the Azure DevOps instance to call home.
 {: .prompt-info }
 
-I hope this helps to explain how the Azure DevOps agent extension works and how it can be used with a proxy.
+However as the Azure DevOps agent also needs to install tools that might not exist on the machine, we will have to set the APT proxy as well.
+
+There's different ways of setting the apt proxy, however to keep it simple I have chosen to create the apt.conf file at /etc/apt with the content:
+``` text
+Acquire::http::Proxy "http://10.2.0.7:3128";
+```
+This can either be done by the CustomScript extension or as part of a golden image capturing.
+
+I hope this helps to cast some clarity on how the Azure DevOps agent extension works and how it can be used behind a proxy.
 Thank you for reading!
