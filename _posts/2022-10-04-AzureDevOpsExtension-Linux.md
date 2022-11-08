@@ -31,7 +31,7 @@ However the NSG will not interrupt web traffic within the virtual network.
 >  I highely suggest that you use the Squid Proxy sever in Azure Marketplace to experiment or for a sandbox environment.
 {: .prompt-info }
 
-``` bicep
+``` plaintext
 var location = resourceGroup().location
 var AzureDevOpsPATToken = 'AzureDevOpsPATToken'
 var subnetId = '/subscriptions/81bee834-3e8e-4f5d-bb31-3316a05e5583/resourceGroups/demo-rg/providers/Microsoft.Network/virtualNetworks/demo-vnet/subnets/demo-snet'
@@ -147,7 +147,7 @@ The settings files contains the ProtectedSettings and Settings attribute of the 
 Once you have allowed the Azure DevOps VM extension to download itself, then the next problem will be that the Azure DevOps VM Extension itself is not proxy aware and fail when trying to download the agent zip and enable agent script.
 Looking at the code for the Azure DevOps Extension, we can see on row 596 in the AzureRM.py that it will try to run the command: "Util.url_retrieve(downloadUrl, agentFile)".
 The downloadUrl and agentFile is defined in the VM Extension part of your scale-set.
-``` bicep
+``` plaintext
 {
     name: 'Microsoft.Azure.DevOps.Pipelines.Agent'
     properties: {
@@ -194,7 +194,7 @@ However, there is no function where this file gets populated on the fly dependin
 
 As we cannot have the Extension to understand the use of proxy, we can we can edit the path for agentDownloadUrl and enableScriptDownloadUrl to be hosted on a Azure Storage Account with a private endpoint in the same virtual network as the VMSS.
 This will allow the Azure DevOps Extension to download these files without a web proxy (as we are allowed to send web traffic within our virtual network without having the traffic dropped.)
-``` bicep
+``` plaintext
 {
     name: 'Microsoft.Azure.DevOps.Pipelines.Agent'
     properties: {
