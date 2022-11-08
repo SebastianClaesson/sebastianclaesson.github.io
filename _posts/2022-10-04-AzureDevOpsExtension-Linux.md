@@ -1,7 +1,7 @@
 ---
 title: Azure DevOps Pipeline Agent Extension (Ubuntu) - Unauthenticated/Authenticated Proxy.
 date: 2022-11-07 17:55:00
-categories: [Azure, AzureDevOps]
+categories: [AzureDevOps, Azure]
 tags: [powershell,azure,devops,extension,virtual machine,vmss,proxy,ubuntu]     # TAG names should always be lowercase
 ---
 
