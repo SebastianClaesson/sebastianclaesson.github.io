@@ -262,18 +262,20 @@ Once you have successfully updated the extension settings, you can now read the 
 [2022-11-04 07:48:33Z ERR  VstsAgentWebProxy] The proxy url is not a well formed absolute uri string: 10.2.0.7:3128.
 [2022-11-04 07:48:33Z INFO VstsAgentWebProxy] No proxy setting found.
 ```
-Now you Azure DevOps agent can identify and report back to Azure DevOps correctly!
+Now the Azure DevOps agent can report back to Azure DevOps using the web proxy!
 
-Maybe now you have started to wonder - I have issued an Azure DevOps token, where and how is it stored?
+Maybe now you have started to wonder - *I have issued an Azure DevOps token, where and how is it stored?*
 
-Well, to make it simple, the token is used to issue a JWT towards Azure DevOps.
+Well, to be honest I have not yet figured exactly how it works, but I've noticed that the token is used to issue a JWT towards Azure DevOps.
 
 The JWT issued is only valid for a short time and can be used to report back as a healthy agent to Azure DevOps.
 
-The settings file will be inserted into the VM/instance you are running and available on disk.
+The settings file (containing your JWT and other settings) will be inserted into the VM/instance you are running and available on disk.
 The path of the settings file: 
-/var/lib/waagent/Microsoft.VisualStudio.Services.TeamServicesAgentLinux-versionnumber/config/uniquenumber.settings
-The settings files contains the ProtectedSettings and Settings attribute of the extension, meaning the the token is available inside of the file.
+
+*/var/lib/waagent/Microsoft.VisualStudio.Services.TeamServicesAgentLinux-versionnumber/config/uniquenumber.settings*
+
+The settings files contains the ProtectedSettings and Settings attribute of the extension, meaning the the token/JWT is available inside of the file.
 If you want to decrypt it manually, it is possible by using the Python module "HandlerUtil.py" as it contains a function to decode the settings using the computer certificate.
 The code for it:
 ``` python
