@@ -9,27 +9,32 @@ Are you looking to run your Azure DevOps agent behind an unauthenticated/authent
 Then hopefully this post will help you straighten out those question marks that might come up during the process.
 
 We'll start first with a summary of how the installation and deployment of the Azure DevOps VM Extension works, this will help us get an insight of what steps in the process where issues might occur.
-1) VM/VMSS has the Azure DevOps Extension deployed to it, using the portal, cli or infrastructure-as-code.
-2) The VM/VMSS will download the extension in a compressed format (zip) from a public Azure Storage Account.
-3) The Extension will run the "Handler.sh -enable" command and run either AzureRM.py or AzureRM_Python2.py (depending on what Python version is available) to install the DevOps Agent.
-4) AzureRM.py (or AzureRM_Python2.py) will read the settings file (containing the Public and Protected Settings), decrypt the protected settings with the computer certificate available and remove it from the settings file.
-5) AzureRM.py will download the Azure DevOps agent zip file and EnableAgent script specified in the Public settings.
-6) The InstallDependecies.sh script will use APT to install missing dependencies.
-6) The Azure DevOps agent installation will start and configure itself according to the scenario specified.
+1. VM/VMSS has the Azure DevOps Extension deployed to it, using the portal, cli or infrastructure-as-code.
+2. The VM/VMSS will download the extension in a compressed format (zip) from a public Azure Storage Account.
+3. The Extension will run the "Handler.sh -enable" command and run either AzureRM.py or AzureRM_Python2.py (depending on what Python version is available) to install the DevOps Agent.
+4. AzureRM.py (or AzureRM_Python2.py) will read the settings file (containing the Public and Protected Settings), decrypt the protected settings with the computer certificate available and remove it from the settings file.
+5. AzureRM.py will download the Azure DevOps agent zip file and EnableAgent script specified in the Public settings.
+6. The InstallDependecies.sh script will use APT to install missing dependencies.
+7. The Azure DevOps agent installation will start and configure itself according to the scenario specified.
 
 The log locations for the Azure DevOps VM Extension are:
 - /var/log/azure/Microsoft.VisualStudio.Services.TeamServicesAgentLinux
-- /<agent directory>/_diag (The value for the directory per default is "agent")
+- /agent directory/_diag (The value for the directory per default is "agent")
 
 > Read more about the communication and setup of [Azure DevOps Agent](https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/agents?view=azure-devops&tabs=browser)
 {: .prompt-info }
 
 As part of our network design, it is decided that no web traffic may go directly to the internet destination, instead it will always go through a proxy.
+
 If the traffic tries to reach it's destination without going through the proxy, the network security group (NSG) will stop it.
 However the NSG will not interrupt web traffic within the virtual network.
 
->  I highely suggest that you use the Squid Proxy sever in Azure Marketplace to experiment or for a sandbox environment.
+>  I highely suggest that you use the [Squid Proxy Server](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/cloud-infrastructure-services.squid-ubuntu-2004?tab=Overview) in Azure Marketplace to experiment with or for a sandbox environment.
 {: .prompt-info }
+
+{::options parse_block_html="true" /}
+
+<details><summary markdown="span">VMSS Bicep Template Example</summary>
 
 ``` plaintext
 var location = resourceGroup().location
@@ -120,6 +125,8 @@ resource vmss 'Microsoft.Compute/virtualMachineScaleSets@2022-03-01' = {
   }
 }
 ```
+</details>
+<br/>
 
 > Note that in the example ARM file a Personal Access Token (PAT) is required under the protected settings. You should never share your PAT with anyone and always keep it protected, therefor it is not a good practice to use the PAT in clear text of your deployment. Please make sure you only issue short-lived tokens if you are to use them in clear text or use a keyvault reference.
 Read more about that here: [Microsoft.Compute/virtualMachines/extensions](https://learn.microsoft.com/en-us/azure/templates/microsoft.compute/virtualmachines/extensions?pivots=deployment-language-bicep#keyvaultsecretreference)
