@@ -356,7 +356,7 @@ Once all of these configurations have been set in place, then you will successfu
 Meaning the agent can now download the files needed, call home to Azure DevOps and download the dependencies needed to install successfully.
 
 I hope this helps to cast some clarity on how the Azure DevOps agent extension works and how it can be used behind a proxy.
-Thank you for reading and if you enjoy the content I highly suggest that you checkout some of my great colleagues that's been part of figuring this out! They do produce some really great content :)
+Thank you for reading and if you enjoy the content I highly suggest that you checkout some of my great colleagues that's been part of figuring this out!
 
 [Björn Sundling](https://bjompen.com/#/) 
 
