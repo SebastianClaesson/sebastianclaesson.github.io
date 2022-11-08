@@ -140,11 +140,11 @@ Read more about that here: [Microsoft.Compute/virtualMachines/extensions](https:
 
 The first issue we will encounter is that the Azure DevOps Extension will fail it's installation.
 
-This is because the Azure DevOps VM Extension cannot be downloaded, The extension is hosted on Microsoft generated storage accounts.
+This is because the Azure DevOps VM Extension cannot be downloaded as it is hosted on Microsoft generated storage accounts.
 
 In my case the url was: https://umsaqts1kdw3dgdrdmzt.blob.core.windows.net/76d90c30-c607-43bc-49aa-02e322a01e7b/76d92c30-c607-43bc-49aa-32e322a01e7b_1.22.0.0.zip
 
-If you want to see more details about the VM Extension download, you can find it at /var/log/azure/Microsoft.VisualStudio.Services.TeamServicesAgentLinux/CommandExecution.log
+If you want to see more details about the VM Extension logs, you can find them at /var/log/azure/Microsoft.VisualStudio.Services.TeamServicesAgentLinux/CommandExecution.log
 
 *Example log of a successful download:*
 ``` text
@@ -156,9 +156,8 @@ If you want to see more details about the VM Extension download, you can find it
 2022-11-04T08:55:06.192513Z INFO ExtHandler [Microsoft.VisualStudio.Services.TeamServicesAgentLinux-1.22.0.0] Update settings file: 266.settings
 2022-11-04T08:55:06.192717Z INFO ExtHandler [Microsoft.VisualStudio.Services.TeamServicesAgentLinux-1.22.0.0] Install extension [Handler.sh]
 ```
-> As you can see in the log above, this is where the settings file is generated.
-The path of the settings file: /var/lib/waagent/Microsoft.VisualStudio.Services.TeamServicesAgentLinux-<versionnumber>/config/<uniquenumber>.settings
-The settings files contains the ProtectedSettings and Settings attribute of the extension.
+> As you can see in the logs, this is where the settings file is generated.
+We will go deeper into the settings file, what it is used for and when further down.
 {: .prompt-info }
 
 Once you have allowed the Azure DevOps VM extension to download itself, then the next problem will be that the Azure DevOps VM Extension itself is not proxy aware and fail when trying to download the agent zip and enable agent script.
@@ -272,6 +271,9 @@ Well, to make it simple, the token is used to issue a JWT towards Azure DevOps.
 The JWT issued is only valid for a short time and can be used to report back as a healthy agent to Azure DevOps.
 
 The settings file will be inserted into the VM/instance you are running and available on disk.
+The path of the settings file: 
+/var/lib/waagent/Microsoft.VisualStudio.Services.TeamServicesAgentLinux-versionnumber/config/uniquenumber.settings
+The settings files contains the ProtectedSettings and Settings attribute of the extension, meaning the the token is available inside of the file.
 If you want to decrypt it manually, it is possible by using the Python module "HandlerUtil.py" as it contains a function to decode the settings using the computer certificate.
 The code for it:
 ``` python
@@ -330,13 +332,16 @@ _parse_config(self, ctxt, operation):
   ]
 }
 ```
+I have noticed in my tests that if you revoke or let the PAT Token expire, the agent will still be able to communicate and issue a new JWT to report back to Azure DevOps.
+There's uncertainty on exactly how this works, and is probably maintained by Microsoft. I will however, try and do some more digging into this.
+
 > The protected settings part of the settings file is encrypted, the VMSS instance has a computer certificate installed to decrypt the value.
 During the extension installation the protected settings on disk will be wiped after read.
 This can be intercepted in various ways, if you are interested to read the settings file.
 Part of the protected settings contains a JWT for the agent to authenticate to the Azure DevOps instance to call home.
 {: .prompt-info }
 
-However as the Azure DevOps agent also needs to install tools that might not exist on the machine, we will have to set the APT proxy as well.
+As the Azure DevOps agent also needs to install tools that might not exist on the machine, we will have to set the APT proxy as well.
 
 There's different ways of setting the apt proxy, however to keep it simple I have chosen to create the apt.conf file at /etc/apt with the content:
 ``` text
