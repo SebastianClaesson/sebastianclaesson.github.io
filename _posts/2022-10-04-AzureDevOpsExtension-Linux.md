@@ -132,8 +132,7 @@ resource vmss 'Microsoft.Compute/virtualMachineScaleSets@2022-03-01' = {
 If you would like to see Bicep hightlighting, then please up-vote [Rouge Bicep Hightlighting](https://github.com/rouge-ruby/rouge/issues/1887) at GitHub.
 {: .prompt-info }
 
-> Note that in the example ARM file a Personal Access Token (PAT) is required under the protected settings. You should never share your PAT with anyone and always keep it protected, therefor it is not a good practice to use the PAT in clear text of your deployment. Please make sure you only issue short-lived tokens if you are to use them in clear text or use a keyvault reference.
-
+> Note that in the example ARM file a Personal Access Token (PAT) is used under the protected settings. You should never share your PAT with anyone and always keep it protected, therefor it is not a good practice to use the PAT in clear text of your deployment. Please make sure you only issue short-lived tokens if you are to use them in clear text or use a keyvault reference.
 Read more about that here: [Microsoft.Compute/virtualMachines/extensions](https://learn.microsoft.com/en-us/azure/templates/microsoft.compute/virtualmachines/extensions?pivots=deployment-language-bicep#keyvaultsecretreference)
 {: .prompt-info }
 
