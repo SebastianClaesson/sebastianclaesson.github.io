@@ -156,9 +156,7 @@ If you want to see more details about the VM Extension download, you can find it
 2022-11-04T08:55:06.192717Z INFO ExtHandler [Microsoft.VisualStudio.Services.TeamServicesAgentLinux-1.22.0.0] Install extension [Handler.sh]
 ```
 > As you can see in the log above, this is where the settings file is generated.
-
 The path of the settings file: /var/lib/waagent/Microsoft.VisualStudio.Services.TeamServicesAgentLinux-<versionnumber>/config/<uniquenumber>.settings
-
 The settings files contains the ProtectedSettings and Settings attribute of the extension.
 {: .prompt-info }
 
@@ -332,9 +330,9 @@ _parse_config(self, ctxt, operation):
 }
 ```
 > The protected settings part of the settings file is encrypted, the VMSS instance has a computer certificate installed to decrypt the value.
-> During the extension installation the protected settings on disk will be wiped after read.
-> This can be intercepted in various ways, if you are interested to read the settings file.
-> Part of the protected settings contains a JWT for the agent to authenticate to the Azure DevOps instance to call home.
+During the extension installation the protected settings on disk will be wiped after read.
+This can be intercepted in various ways, if you are interested to read the settings file.
+Part of the protected settings contains a JWT for the agent to authenticate to the Azure DevOps instance to call home.
 {: .prompt-info }
 
 However as the Azure DevOps agent also needs to install tools that might not exist on the machine, we will have to set the APT proxy as well.
