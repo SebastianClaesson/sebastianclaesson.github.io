@@ -240,7 +240,7 @@ As we are allowed to send web traffic within our virtual network without having 
 ```
 Once you have successfully updated the extension settings, you can now read the log file @ /agent/_diag/Agent_timestamp-utc.log which contains the following rows that identifies that we have set the proxy correctly.
 
-*Correct setup.*
+*Correct setup*
 ``` text
 [2022-11-04 08:23:39Z INFO AgentProcess] Arguments parsed
 [2022-11-04 08:23:39Z INFO HostContext] Well known directory 'Bin': '/agent/bin'
@@ -252,7 +252,7 @@ Once you have successfully updated the extension settings, you can now read the 
 [2022-11-04 08:23:39Z INFO HostContext] Well known config file 'ProxyCredentials': '/agent/.proxycredentials'
 [2022-11-04 08:23:39Z INFO VstsAgentWebProxy] Config proxy use DefaultNetworkCredentials.
 ```
-*If the string is not a correct formated string (https/http://<proxyaddress>:<port>).*
+*If the string is not a correct formated string (https/http://proxyaddress:port)*
 ``` text
 [2022-11-04 07:48:33Z INFO AgentProcess] Arguments parsed
 [2022-11-04 07:48:33Z INFO HostContext] Well known directory 'Bin': '/agent/bin'
@@ -341,6 +341,7 @@ There's different ways of setting the apt proxy, however to keep it simple I hav
 Acquire::http::Proxy "http://10.2.0.7:3128";
 ```
 This can either be done by the CustomScript extension or as part of a golden image capturing.
+Once all of these configurations have been set in place, then you will successfully be able to use your proxy and reach Azure DevOps/APT.
 
 I hope this helps to cast some clarity on how the Azure DevOps agent extension works and how it can be used behind a proxy.
 Thank you for reading!
