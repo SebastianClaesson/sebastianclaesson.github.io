@@ -29,12 +29,13 @@ As part of our network design, it is decided that no web traffic may go directly
 If the traffic tries to reach it's destination without going through the proxy, the network security group (NSG) will stop it.
 However the NSG will not interrupt web traffic within the virtual network.
 
->  I highely suggest that you use the [Squid Proxy Server](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/cloud-infrastructure-services.squid-ubuntu-2004?tab=Overview) in Azure Marketplace to experiment with or for a sandbox environment.
+>  I highely suggest that you use the [Squid Proxy Server](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/cloud-infrastructure-services.squid-ubuntu-2004?tab=Overview) in Azure Marketplace to experiment with, Note that the product has an hourly cost.
 {: .prompt-info }
 
+The first thing we will have to do is to create the Bicep template.
 {::options parse_block_html="true" /}
 
-<details><summary markdown="span">VMSS Bicep Template Example</summary>
+<details><summary markdown="span"><b>VMSS Bicep Template Example</b></summary>
 
 ``` plaintext
 var location = resourceGroup().location
@@ -127,6 +128,9 @@ resource vmss 'Microsoft.Compute/virtualMachineScaleSets@2022-03-01' = {
 ```
 </details>
 <br/>
+>  Currently rouge do not support Bicep syntax highlighting. 
+If you would like to see Bicep hightlighting, then please up-vote [Rouge Bicep Hightlighting](https://github.com/rouge-ruby/rouge/issues/1887) at GitHub.
+{: .prompt-info }
 
 > Note that in the example ARM file a Personal Access Token (PAT) is required under the protected settings. You should never share your PAT with anyone and always keep it protected, therefor it is not a good practice to use the PAT in clear text of your deployment. Please make sure you only issue short-lived tokens if you are to use them in clear text or use a keyvault reference.
 Read more about that here: [Microsoft.Compute/virtualMachines/extensions](https://learn.microsoft.com/en-us/azure/templates/microsoft.compute/virtualmachines/extensions?pivots=deployment-language-bicep#keyvaultsecretreference)
