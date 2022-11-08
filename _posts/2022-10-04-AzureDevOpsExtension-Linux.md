@@ -8,6 +8,7 @@ tags: [powershell,azure,devops,extension,virtual machine,vmss,proxy,ubuntu]     
 Are you looking to run your Azure DevOps agent behind an unauthenticated/authenticated web proxy for traffic destined to the internet?
 
 Then hopefully this post will help you straighten out those question marks that might come up during the process.
+There's a bit of a difference between the Windows and Linux agent, this post will only cover the Linux agent running on Ubuntu 20.04, one for the Windows Agent is on it's way.
 
 We'll start first with a summary of how the installation and deployment of the Azure DevOps VM Extension works, this will help us get an insight of what steps in the process where issues might occur.
 1. VM/VMSS has the Azure DevOps Extension deployed to it, using the portal, cli or infrastructure-as-code.
