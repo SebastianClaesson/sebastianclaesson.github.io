@@ -245,7 +245,7 @@ To understand how the sendGrid output binding works, we can read the help docs a
 
 But to keep it short, we'll add the following code to our PowerShell script.
 
-```posh
+```powershell
 $mail = @{
     "personalizations" = @(
         @{
