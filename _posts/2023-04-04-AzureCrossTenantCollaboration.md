@@ -9,7 +9,7 @@ The possibility to create Virtual network peerings across Azure Active Directory
 It's a feature which is allowed by default and is quite easy to setup and get started with. \
 It helps provide private networking between two Azure AD tenants subscriptions and can be an alternative to private link/private endpoints etc. \
 This post will go through the setup and requirements, but also how you can detect cross-tenant collaboration & blocking it. \
-I will not deep-dive into all the toolings around it, such as Conditional access or other features you get available by using a [Azure AD Premium subscription](https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-mfa-licensing).
+I will not deep-dive into all the toolings around it, such as Conditional access or other features you get available by using [Azure AD Premium](https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-mfa-licensing).
 
 Tenant A is a new Tenant, out-of-box, with no customization done to External collaboration settings.
 Out of box, external collaboration settings:
