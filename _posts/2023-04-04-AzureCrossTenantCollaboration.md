@@ -16,7 +16,7 @@ Out of box, external collaboration settings:
 ![Tenant A - External Collaboration](/assets/images/2023/SourceGuestSettings.png) \
 This means that anyone in the Tenant A organization can invite guest users and that it may be sent to any domain. \
 If we head over to Cross-tenant access settings, we can also see that B2B collaboration access settings are allowed both inbound and outbound. \
-Reference: [Cross-tenant access settings](https://learn.microsoft.com/en-us/azure/active-directory/external-identities/cross-tenant-access-overview#default-settings) \
+_Reference: [Cross-tenant access settings](https://learn.microsoft.com/en-us/azure/active-directory/external-identities/cross-tenant-access-overview#default-settings)_ \
 We attempt to reach the Azure AD Tenant A from the user in Tenant B, without being invited as a guest to that tenant.
 
 ![Tenant B to Tenant A - External Collaboration attempt 1](/assets/images/2023/TenantBInteractionWithoutInvitation.png)
