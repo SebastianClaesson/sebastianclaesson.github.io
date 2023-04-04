@@ -1,8 +1,8 @@
 ---
 title: Azure AD Cross-tenant Collaboration / VNET Cross-tenant peering
 date: 2023-04-03 12:55:00
-categories: [Azure DevOps, DevOps Agent]
-tags: [powershell,azure,devops,extension,virtual machine,vmss,proxy,ubuntu]     # TAG names should always be lowercase
+categories: [Azure, Cross-tenant collaboration]
+tags: [powershell,azure,azure ad,network,cross-tenant,b2b]     # TAG names should always be lowercase
 ---
 
 The possibility to create Virtual network peerings across Azure Active Directory tenants has been available since 2018. \
