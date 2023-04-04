@@ -33,7 +33,9 @@ $params = @{
 }
 $Invite = New-MgInvitation @params
 
-$invite | select Id, InviteRedeemUrl, InvitedUserDisplayName, InvitedUserEmailAddress, InvitedUserType, Status, @{'n'='UserId';'E'={$_.InvitedUser.Id}} | ConvertTo-Json | clip
+$invite | 
+select-object Id, InviteRedeemUrl, InvitedUserDisplayName, InvitedUserEmailAddress, InvitedUserType, Status, @{'n'='UserId';'E'={$_.InvitedUser.Id}} | 
+ConvertTo-Json
 ```
 
 The response from the invitation is as following:
