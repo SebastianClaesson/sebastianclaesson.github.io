@@ -1,6 +1,6 @@
 ---
 title: Azure AD Cross-tenant Collaboration / VNET Cross-tenant peering
-date: 2023-04-04 12:55:00
+date: 2023-04-03 12:55:00
 categories: [Azure DevOps, DevOps Agent]
 tags: [powershell,azure,devops,extension,virtual machine,vmss,proxy,ubuntu]     # TAG names should always be lowercase
 ---
@@ -171,5 +171,5 @@ Now you'll visualize each request and you are able to identify each tenant that 
 ![Dataset](/assets/images/2023/kqlexample.png)
 
 # Summary
-It's a good idea to keep track of possible cross-tenant integrations, may it be using virtual network peerings / private links / private endpoints or by using service endpoints.
+It's a good idea to keep track of possible cross-tenant integrations, may it be using virtual network peerings / private links / private endpoints or by using service endpoints. \
 This post only covers some of these points and how it can be prevented using other methods than Azure policy or Azure monitor/alert.
