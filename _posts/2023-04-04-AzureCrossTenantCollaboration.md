@@ -11,6 +11,8 @@ It helps provide private networking between two Azure AD tenants subscriptions a
 This post will go through the setup and requirements, but also how you can detect cross-tenant collaboration & blocking it. \
 I will not deep-dive into all the toolings around it, such as Conditional access or other features you get available by using [Azure AD Premium](https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-mfa-licensing).
 
+## Azure AD settings & invitation process
+
 Tenant A is a new Tenant, out-of-box, with no customization done to External collaboration settings.
 Out of box, external collaboration settings:
 ![Tenant A - External Collaboration](/assets/images/2023/SourceGuestSettings.png) \
@@ -173,7 +175,7 @@ SigninLogs
 Now you'll visualize each request and you are able to identify each tenant that your users are interacting with.
 ![Dataset](/assets/images/2023/kqlexample.png)
 
-# Summary
+## Summary
 It's a good idea to keep track of possible cross-tenant integrations, may it be using virtual network peerings / private links / private endpoints or by using service endpoints. \
 This post only covers some of these points and how it can be prevented using other methods than Azure policy or Azure monitor/alert. \
 _This post resulted in a pull request to update Microsoft Learn documentation on [Pull Request 107640](https://github.com/MicrosoftDocs/azure-docs/pull/107640)._
