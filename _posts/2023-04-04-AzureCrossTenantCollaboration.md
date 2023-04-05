@@ -89,7 +89,7 @@ ProvisioningState : Succeeded
 ```
 As indicated, the peering has been initiated, however not completed.\
 When checking the status of the remote virtual network we are trying to peer with, we can see that there's been no peering created.
-![Tenant A Peerings](/assets/images/2023/TenantAVnetPeerStatus.png)
+![Tenant A Peerings](/assets/images/2023/TenantAVnetPeerStatus.png) \
 This means we'll have to estalish a peer from Tenant A to Tenant B.\
 The easiest way is simply to change tenant in the invited user's context and establish the peering using the portal experience.\
 To confirm a successful peering, we can run the following PowerShell command
