@@ -121,8 +121,9 @@ These networks can now access each other and routes has been presented by the pe
 
 # How do we protect our Organization for cross-tenant collaboration?
 You might ask yourself "How do we protect our employees/organization from accidently allowing cross-tenant virtual network peerings to prevent data exfiltration or network communication by-passing the VNA?".\
-There are different ways to enforce and detect this, however, if we assume that Tenant B is a organization which has adopted the Landing Zone concept, we know that our developers/users have access to modify route tables etc. to manage their LZ. \
-In this part we'll focus on how we can prevent cross-tenant collaboration. \
+There are different ways to enforce and detect this some examples could be a controlled process for when BGP is enabled on route tables. \
+However, if we assume that both Tenants/Organizations have adopted the Landing Zone concept, we know that our developers/users have access to modify route tables, network peerings etc. to manage their LZ. \
+In this part we'll focus on how we can prevent cross-tenant collaboration and not on suggested Azure policies to enforce controlled processes around infrastructure/network changes. \
 We'll have to go back to the Cross-tenant access settings, specfically the Inbound and Outbound B2B collaboration settings.
 
 > Note: B2B collaboration settings are not only limited to Azure resource actions, and can include Office 365 and other services.\
