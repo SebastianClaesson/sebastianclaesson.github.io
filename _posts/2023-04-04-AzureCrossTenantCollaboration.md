@@ -175,4 +175,5 @@ Now you'll visualize each request and you are able to identify each tenant that 
 
 # Summary
 It's a good idea to keep track of possible cross-tenant integrations, may it be using virtual network peerings / private links / private endpoints or by using service endpoints. \
-This post only covers some of these points and how it can be prevented using other methods than Azure policy or Azure monitor/alert.
+This post only covers some of these points and how it can be prevented using other methods than Azure policy or Azure monitor/alert. \
+_This post resulted in a pull request to update Microsoft Learn documentation on [Pull Request 107640](https://github.com/MicrosoftDocs/azure-docs/pull/107640)._
