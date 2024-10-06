@@ -18,7 +18,7 @@ If you are interested in following the least-privileged access model, then we mu
 The process of subscription vending must not be bound to a employees account or permissions.
 However, not everyone is comfortable following the guide and takes short-cuts such as assigning Enterprise Administrator over the billing account using the IAM controls in Azure.
 
-To assist with the creation of the EA Role assignment, I've created the following script [New-EnterpriseAgreementRoleAssignment]https://github.com/SebastianClaesson/SubscriptionVendingExample/blob/main/New-EnterpriseAgreementRoleAssignment.ps1
+To assist with the creation of the EA Role assignment, I've created the following script [New-EnterpriseAgreementRoleAssignment](https://github.com/SebastianClaesson/SubscriptionVendingExample/blob/main/New-EnterpriseAgreementRoleAssignment.ps1)
 
 Once the assignment has been done, we need to build our subscription vending automation somewhere.
 This could be a Azure Function, GitHub/Azure DevOps Pipeline, Custom container or part of your self-service portal.
