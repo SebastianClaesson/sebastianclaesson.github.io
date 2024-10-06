@@ -1,5 +1,7 @@
 ---
 title: Azure AD Cross-tenant Collaboration / VNET Cross-tenant peering
+description: Azure AD Cross-tenant Collaboration / VNET Cross-tenant peering
+author: Sebastian Claesson
 date: 2023-04-03 12:55:00
 categories: [Azure, Cross-tenant collaboration]
 tags: [powershell,azure,azure ad,network,cross-tenant,b2b]     # TAG names should always be lowercase

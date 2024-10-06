@@ -1,6 +1,8 @@
 ---
 title: Azure policy to tear down environments
 date: 2026-04-04 12:55:00
+description: Azure policy to tear down environments
+author: Sebastian Claesson
 categories: [Azure DevOps, DevOps Agent]
 tags: [powershell,azure,devops,extension,virtual machine,vmss,proxy,ubuntu]     # TAG names should always be lowercase
 ---

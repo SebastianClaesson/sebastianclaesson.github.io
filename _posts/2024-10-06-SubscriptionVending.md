@@ -1,5 +1,7 @@
 ---
 title: Subscription Vending
+description: Subscription Vending guide for Azure Landing Zones
+author: Sebastian Claesson
 date: 2024-10-06 00:55:00
 categories: [Azure, Subscription vending]
 tags: [powershell,azure,subscription,landing zone,vending,machine,vendingmachine,automation,permissions,ea,mca,rest]     # TAG names should always be lowercase

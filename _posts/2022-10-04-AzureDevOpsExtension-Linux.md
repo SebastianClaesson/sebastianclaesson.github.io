@@ -1,5 +1,7 @@
 ---
 title: Azure DevOps Pipeline Agent Extension (Ubuntu) - Behind a web proxy.
+description: Azure DevOps Pipeline Agent Extension (Ubuntu) - Behind a web proxy.
+author: Sebastian Claesson
 date: 2022-11-08 12:55:00
 categories: [Azure DevOps, DevOps Agent]
 tags: [powershell,azure,devops,extension,virtual machine,vmss,proxy,ubuntu]     # TAG names should always be lowercase

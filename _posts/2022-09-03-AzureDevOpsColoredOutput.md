@@ -1,5 +1,7 @@
 ---
 title: Azure DevOps Pipeline Output
+description: Azure DevOps Pipeline Output
+author: Sebastian Claesson
 date: 2022-09-03 06:55:00
 categories: [Azure DevOps, Colored Output]
 tags: [powershell,azure devops,output,ansi,color,pipeline]     # TAG names should always be lowercase
