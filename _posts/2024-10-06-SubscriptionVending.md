@@ -337,7 +337,7 @@ stages:
           pwsh: true
           ScriptPath: 'New-AzureSubscription.ps1'
           ScriptArguments: >
-            -Identifier '$`{{ parameters.Identifier `}}'
+            -Identifier '$`&#123&#123 parameters.Identifier `}}'
             -BillingScope '$`{{ parameters.BillingScope `}}'
             -Workload 'Production'
             -ManagementGroupId '/providers/Microsoft.Management/managementGroups/$`{{ parameters.ManagementGroupName `}}'
@@ -353,7 +353,7 @@ After importing and running the Azure DevOps pipeline, the output should simply 
 We have now established a workload identity to provision our Azure Subscriptions.
 We have also created the nessecary automation & Azure DevOps pipeline to provide a basic self-service feature for our colleagues.
 
-We can continue to add steps to our subscription vending, for example implementing IPAM, creating critical infrastructure such as peering to hub network, budgets, service health alerts and so on.
+We can continue to add steps to our subscription vending, for example incorporating the orchestration of Entra Id security groups, privileged access management, entitlement management, IP address management, critical infrastructure resources such as peering to hub network, budgets, service health alerts and so on.
 
 We're in the process of developing a Blazor website using MSAL to provide a modern UI.
 This is hopefully something we can opensource in a near future, until then I hope this little post gave inspiration to your subscription vending process!
