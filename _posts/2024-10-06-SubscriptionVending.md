@@ -104,6 +104,7 @@ if ($SubAliases.AliasName -Contains "$($params.AliasName)") {
 ```
 
 ### Azure DevOps pipeline example
+#### Configure Service Connection with Federated Credentials
 To utilize Azure DevOps for our Workload identity, we need to configure [federated credentials](https://devblogs.microsoft.com/devops/workload-identity-federation-for-azure-deployments-is-now-generally-available/) to our workload identity.
 
 This means we do not have to manage a client secret, instead we trust the Azure DevOps directory to manage the credentials to our workload identity.
@@ -281,7 +282,7 @@ $Params = @{
 }
 Set-ADOPSServiceConnection @Params
 ```
-
+#### Azure DevOps .yml example
 Once this is done, we can write our Azure DevOps pipeline.
 ```yml
 trigger: none
