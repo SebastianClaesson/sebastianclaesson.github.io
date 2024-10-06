@@ -286,7 +286,7 @@ trigger: none
   
 variables: 
 - name: subscriptionCreationServiceConnection
-  value: 'sc-subscriptionvending-prod'
+  value: 'SERVICECONNECTIONNAME'
 
 parameters:
 - name: Identifier
