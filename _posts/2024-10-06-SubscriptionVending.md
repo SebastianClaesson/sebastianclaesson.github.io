@@ -77,7 +77,7 @@ $params = @{
     SubscriptionName = "$DisplayName-$EnvironmentShortName".toLower()
     BillingScope = $BillingScope
     Workload = $Workload
-    ManagementGroupId = "/providers/Microsoft.Management/managementGroups/$($EnvironmentShortName)".tolower()
+    ManagementGroupId = $ManagementGroupId
 }
 
 Write-Verbose "Attempting to list any Azure Subscription" -Verbose
@@ -334,7 +334,7 @@ stages:
           pwsh: true
           ScriptPath: 'New-AzureSubscription.ps1'
           ScriptArguments: >
-            -Identifier '${{ parameters.Identifier }}'
+            -Identifier ''${{ parameters.Identifier }}''
             -BillingScope '${{ parameters.BillingScope }}'
             -Workload 'Production'
             -ManagementGroupId '/providers/Microsoft.Management/managementGroups/${{ parameters.ManagementGroupName }}'
