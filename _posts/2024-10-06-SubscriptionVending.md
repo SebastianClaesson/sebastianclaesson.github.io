@@ -112,7 +112,7 @@ This simply can be done by providing for example the [Reader](https://learn.micr
 
 To save time, We'll also create a script to manage the access and configuration of the service connection.
 
-```PowerShell
+```powershell
 ## Requires the module ADOPS
 function New-ADOServiceConnection {
     [CmdletBinding()]
