@@ -337,12 +337,12 @@ stages:
           pwsh: true
           ScriptPath: 'New-AzureSubscription.ps1'
           ScriptArguments: >
-            -Identifier '$`{`{ parameters.Identifier `}`}'
-            -BillingScope '$`{`{ parameters.BillingScope `}`}'
+            -Identifier '$`{{ parameters.Identifier `}}'
+            -BillingScope '$`{{ parameters.BillingScope `}}'
             -Workload 'Production'
-            -ManagementGroupId '/providers/Microsoft.Management/managementGroups/$`{`{ parameters.ManagementGroupName `}`}'
+            -ManagementGroupId '/providers/Microsoft.Management/managementGroups/$`{{ parameters.ManagementGroupName `}}'
             -EnvironmentShortName '$(variableOutput.environmentShortName)'
-            -DisplayName '$`{`{ parameters.DisplayName `}`}'
+            -DisplayName '$`{{ parameters.DisplayName `}}'
 ```
 
 After importing and running the Azure DevOps pipeline, the output should simply look like this:
