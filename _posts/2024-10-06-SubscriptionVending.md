@@ -13,19 +13,19 @@ An important part of Azure Landing Zones is the ability to create Azure subscrip
 > Any scripts and code used in this post can be found at: https://github.com/SebastianClaesson/SubscriptionVendingExample
 {: .prompt-tip }
 
-## Enterprise Agreement Role Assignment for workload identities
+# Enterprise Agreement Role Assignment for workload identities
 There's an article on [Microsoft Learn](https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/assign-roles-azure-service-principals#permissions-that-can-be-assigned-to-the-service-principal) that goes through how to assign a workload identity permissions to an Enterprise Agreement. 
 
 If you are interested in following the least-privileged access model, then we must follow the article above to grant our workload identity access as "SubscriptionCreator" over our enrollment account.
 The process of subscription vending must not be bound to a employees account or permissions.
-However, not everyone is comfortable following the guide and takes short-cuts such as assigning Enterprise Administrator over the billing account using the IAM controls in Azure.
+However, not everyone is comfortable following the guide and take short-cuts such as assigning Enterprise Administrator over the billing account using the IAM controls in Azure.
 
 To assist with the creation of the EA Role assignment, I've created the following script [New-EnterpriseAgreementRoleAssignment](https://github.com/SebastianClaesson/SubscriptionVendingExample/blob/main/New-EnterpriseAgreementRoleAssignment.ps1)
 
 Once the assignment has been done, we need to build our subscription vending automation somewhere.
-This could be a Azure Function, GitHub/Azure DevOps Pipeline, Custom container or part of your self-service portal.
+This could be an Azure Function, GitHub/Azure DevOps Pipeline, Custom container or part of your self-service portal.
 
-## Create your first Azure Subscription using PowerShell
+# Create your first Azure Subscription using PowerShell
 
 The [Az.Subscription PowerShell module](https://www.powershellgallery.com/packages/Az.Subscription) contains the function "New-AzSubscriptionAlias" to provision a new Azure Subscription.
 
@@ -103,13 +103,14 @@ if ($SubAliases.AliasName -Contains "$($params.AliasName)") {
 }
 ```
 
-### Azure DevOps pipeline example
-#### Configure Service Connection with Federated Credentials
-To utilize Azure DevOps for our Workload identity, we need to configure [federated credentials](https://devblogs.microsoft.com/devops/workload-identity-federation-for-azure-deployments-is-now-generally-available/) to our workload identity.
+## Azure DevOps pipeline example
+## Configure Service Connection with Federated Credentials
+To utilize Azure DevOps for our Workload identity, we can utilize different types of authentication.
+I strongly recommend that [federated credentials](https://devblogs.microsoft.com/devops/workload-identity-federation-for-azure-deployments-is-now-generally-available/) is configured to authenticate our workload identity.
 
 This means we do not have to manage a client secret, instead we trust the Azure DevOps directory to manage the credentials to our workload identity.
 As part of the service connection in Azure DevOps, we need to set a Azure Subscription where the pipeline initializes when running Azure PowerShell scripts.
-This simply can be done by providing for example the [Reader](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/general#reader) role over a subscription.
+This simply can be done by providing for example the [Reader](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/general#reader) role over a subscription, as we do not need access to any resources.
 > You must register the resource providers for Management Groups and Subscriptions to successfully run the automation in your initial subscription.
 {: .prompt-tip }
 
@@ -282,8 +283,13 @@ $Params = @{
 }
 Set-ADOPSServiceConnection @Params
 ```
-#### Azure DevOps .yml example
+
+> Do not forget to limit access to the service principal. If you intend to let non-platform engineers provision and create landing zones then perhaps a good option is to configure approval for the use of the service connection.
+{: .prompt-tip }
+
+### Azure DevOps .yml example
 Once this is done, we can write our Azure DevOps pipeline.
+We will start with just creating our new Landing Zone and setting our prefered Management group.
 ```yml
 trigger: none
   
@@ -348,16 +354,16 @@ stages:
 After importing and running the Azure DevOps pipeline, the output should simply look like this:
 ![result](/assets/images/2024/10/DevOpsSubscriptionStatus.png)
 
+Now we can add more steps to the pipeline according to our needs.
+
 ## Conclusion
 
-We have now established a workload identity to provision our Azure Subscriptions.
+We have now established a workload identity with federated credentials to provision our Azure Subscriptions.
 We have also created the nessecary automation & Azure DevOps pipeline to provide a basic self-service feature for our colleagues.
 
 We can continue to add steps to our subscription vending, for example incorporating the orchestration of Entra Id security groups, privileged access management, entitlement management, IP address management, critical infrastructure resources such as peering to hub network, budgets, service health alerts and so on.
 
-We're in the process of developing a Blazor website using MSAL to provide a modern UI.
-This is hopefully something we can opensource in a near future, until then I hope this little post gave inspiration to your subscription vending process!
-
 _References;_
 - [_Subscription vending implementation guidance_](https://learn.microsoft.com/en-us/azure/architecture/landing-zones/subscription-vending)
 - [_Subscription vending_](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/design-area/subscription-vending)
+- [_Azure devops workload identity federation_](https://devblogs.microsoft.com/devops/workload-identity-federation-for-azure-deployments-is-now-generally-available)
