@@ -17,3 +17,19 @@ In this post, we'll try to see if we can use deplyoment scripts and other techni
 We'll try to use the deployIfNotExists method of an Azure policy, that will target any resource group without a storage account.
 It will try to remidiate the resource group by doing a complete deployment with an empty template.
 [Complete mode](https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/deployment-modes#complete-mode) means that the resource group will delete any Azure resources that's not defined in the deployment.
+
+## Overprivileged roles
+Many of the builtin and community policies which uses the deploy if not exists use overprivileged roles.
+Look at this table;
+<Tavle of content with statistics of role and target resources>
+
+The role itself will be inherited to your policy set (initiative) and could be used by a policy to gain access.
+
+# Copy data using backbone
+# Leak SAS tokens
+# Leak VPN IP and shared key
+
+## Policy lifecycle tools
+- AzOps
+- Enterprise Policy As Code
+- Azure landing zone repo
