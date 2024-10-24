@@ -1,0 +1,16 @@
+{
+  "runtimeSettings": [
+    {
+      "handlerSettings": {
+        "protectedSettingsCertThumbprint": "C995E47CEFBD87EBA02B01E1BBFBA6D1A6E83352",
+        "protectedSettings": "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",
+        "publicSettings": {
+          "isPipelinesAgent": true,
+          "agentFolder": "C:\\agent",
+          "agentDownloadUrl": "https://vstsagentpackage.azureedge.net/agent/2.210.1/vsts-agent-win-x64-2.210.1.zip",
+          "enableScriptDownloadUrl": "https://vstsagenttools.blob.core.windows.net/tools/ElasticPools/Windows/15/enableagent.ps1"
+        }
+      }
+    }
+  ]
+}
