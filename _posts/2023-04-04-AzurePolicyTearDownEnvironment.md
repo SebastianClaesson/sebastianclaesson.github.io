@@ -106,3 +106,19 @@ This is great! It means we cannot utilize the deployment mode functionality to w
 ## Deployment script with deletion.
 
 ## Fetch all information and dump on public storage account using copy backbone
+
+## Overprivileged roles
+Many of the builtin and community policies which uses the deploy if not exists use overprivileged roles.
+Look at this table;
+<Tavle of content with statistics of role and target resources>
+
+The role itself will be inherited to your policy set (initiative) and could be used by a policy to gain access.
+
+# Copy data using backbone
+# Leak SAS tokens
+# Leak VPN IP and shared key
+
+## Policy lifecycle tools
+- AzOps
+- Enterprise Policy As Code
+- Azure landing zone repo
