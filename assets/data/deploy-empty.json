@@ -1,0 +1,71 @@
+{
+    "properties": {
+      "displayName": "Deploy-empty-resourceGroup-completeMode",
+      "policyType": "Custom",
+      "mode": "All",
+      "metadata": {
+        "category": "test"
+      },
+      "parameters": {},
+      "policyRule": {
+        "if": {
+          "field": "type",
+          "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+        },
+        "then": {
+          "effect": "DeployIfNotExists",
+          "details": {
+            "type": "Microsoft.Storage/storageAccounts",
+            "existenceCondition": {
+              "allOf": [
+                {
+                  "field": "kind",
+                  "equals": "StorageV2"
+                },
+                {
+                  "field": "Microsoft.Storage/storageAccounts/sku.name",
+                  "contains": "Standard"
+                }
+              ]
+            },
+            "roleDefinitionIds": [
+              "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+            ],
+            "deployment": {
+              "properties": {
+                "mode": "Incremental",
+                "parameters": {},
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {},
+                  "variables": {},
+                  "resources": [
+                    {
+                      "type": "Microsoft.Resources/deployments",
+                      "name": "Deploy-empty-resourceGroup-completeMode",
+                      "apiVersion": "2020-06-01",
+                      "properties": {
+                        "mode": "Complete",
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "parameters": {},
+                          "variables": {},
+                          "resources": []
+                        },
+                        "parameters": {}
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "id": "/subscriptions/8661f1d1-0bb1-4be0-b73c-6a8f3b304cf6/providers/Microsoft.Authorization/policyDefinitions/31583c2f-6311-42d0-bc02-f6cf482ff6ac",
+    "type": "Microsoft.Authorization/policyDefinitions",
+    "name": "31583c2f-6311-42d0-bc02-f6cf482ff6ac"
+  }

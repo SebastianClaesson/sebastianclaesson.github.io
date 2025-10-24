@@ -1,0 +1,175 @@
+{
+    "properties": {
+        "name": "deploymentscriptPolicy",
+        "displayName": "Script to update tag on RG.",
+        "mode": "All",
+        "description": "Script to update tag on RG.",
+        "metadata": {
+            "category": "test"
+        },
+        "policyType": "Custom",
+        "parameters": {
+            "RemediationIdentity": {
+                "type": "String"
+            },
+            "ResourceGroupName": {
+                "type": "String",
+                "defaultValue": "test-rg"
+            },
+            "StorageAccountId": {
+                "type": "string",
+                "defaultValue": "/subscriptions/8661f1d1-0bb1-4be0-b73c-6a8f3b304cf6/resourceGroups/demo-rg/providers/Microsoft.Storage/storageAccounts/sagnajoja"
+            },
+            "StorageAccountName": {
+                "type": "String",
+                "defaultValue": "sagnajoja"
+            }
+        },
+        "policyRule": {
+            "if": {
+                "anyOf": [
+                    {
+                        "field": "Microsoft.Storage/storageAccounts/accountType",
+                        "notEquals": "[parameters('RemediationIdentity')]"
+                    }
+                ]
+            },
+            "then": {
+                "effect": "deployIfNotExists",
+                "details": {
+                    "type": "Microsoft.Compute/virtualMachines",
+                    "name": "[field('name')]",
+                    "existenceCondition": {
+                        "anyOf": [
+                            {
+                                "field": "Microsoft.Resources/tags/tags",
+                                "notEquals": "[parameters('RemediationIdentity')]"
+                            },
+                            {
+                                "field": "Microsoft.Resources/tags/tags",
+                                "notEquals": "[parameters('ResourceGroupName')]"
+                            }
+                        ]
+                    },
+                    "roleDefinitionIds": [
+                        "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                    ],
+                    "deploymentScope": "subscription",
+                    "deployment": {
+                        "location": "swedencentral",
+                        "properties": {
+                            "mode": "Incremental",
+                            "template": {
+                                "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+                                "contentVersion": "1.0.0.0",
+                                "parameters": {
+                                    "RemediationIdentity": {
+                                        "type": "String"
+                                    },
+                                    "ResourceGroupName": {
+                                        "type": "String"
+                                    },
+                                    "StorageAccountName": {
+                                        "type": "string"
+                                    },
+                                    "StorageAccountId": {
+                                        "type": "string"
+                                    }
+                                },
+                                "variables": {},
+                                "resources": [
+                                    {
+                                        "name": "deploymentScript-CompleteDeploy",
+                                        "type": "Microsoft.Resources/deployments",
+                                        "apiVersion": "2019-10-01",
+                                        "resourceGroup": "rg-aci",
+                                        "expressionEvaluationOptions": {
+                                            "scope": "inner"
+                                        },
+                                        "properties": {
+                                            "mode": "Incremental",
+                                            "template": {
+                                                "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                                                "contentVersion": "1.0.0.0",
+                                                "parameters": {
+                                                    "RemediationIdentity": {
+                                                        "type": "String"
+                                                    },
+                                                    "ResourceGroupName": {
+                                                        "type": "String"
+                                                    },
+                                                    "StorageAccountName": {
+                                                        "type": "string"
+                                                    },
+                                                    "StorageAccountId": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "resources": [
+                                                    {
+                                                        "type": "Microsoft.Resources/deploymentScripts",
+                                                        "apiVersion": "2019-10-01-preview",
+                                                        "name": "deploymentScript-RemoveResourceGroup",
+                                                        "location": "swedencentral",
+                                                        "kind": "AzurePowerShell",
+                                                        "identity": {
+                                                            "type": "UserAssigned",
+                                                            "userAssignedIdentities": {
+                                                                "[parameters('RemediationIdentity')]": {}
+                                                            }
+                                                        },
+                                                        "properties": {
+                                                            "forceUpdateTag": "1",
+                                                            "azPowerShellVersion": "4.1",
+                                                            "storageAccountSettings": {
+                                                                "storageAccountName": "[parameters('StorageAccountName')]",
+                                                                "storageAccountKey": "[listKeys(parameters('StorageAccountId'), '2019-06-01').keys[0].value]"
+                                                            },
+                                                            "retentionInterval": "P1D",
+                                                            "cleanupPreference": "OnSuccess",
+                                                            "scriptContent": "[concat('Remove-AzResourceGroup -Name ',parameters('ResourceGroupName'),'',' -Force')]"
+                                                        }
+                                                    }
+                                                ],
+                                                "outputs": {}
+                                            },
+                                            "parameters": {
+                                                "ResourceGroupName": {
+                                                    "value": "[parameters('ResourceGroupName')]"
+                                                },
+                                                "RemediationIdentity": {
+                                                    "value": "[parameters('RemediationIdentity')]"
+                                                },
+                                                "StorageAccountName": {
+                                                    "value": "[parameters('StorageAccountName')]"
+                                                },
+                                                "StorageAccountId": {
+                                                    "value": "[parameters('StorageAccountId')]"
+                                                }
+                                            }
+                                        }
+                                    }
+                                ],
+                                "outputs": {}
+                            },
+                            "parameters": {
+                                "ResourceGroupName": {
+                                    "value": "[resourceGroup().name]"
+                                },
+                                "RemediationIdentity": {
+                                    "value": "[parameters('RemediationIdentity')]"
+                                },
+                                "StorageAccountName": {
+                                    "value": "[parameters('StorageAccountName')]"
+                                },
+                                "StorageAccountId": {
+                                    "value": "[parameters('StorageAccountId')]"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
