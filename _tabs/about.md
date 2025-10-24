@@ -5,7 +5,7 @@ order: 4
 ---
 
 Welcome to my techblog!
-My name is Sebastian and I am currently working as a Solutions Architect at Fora in Sweden with primary focus on PowerShell, Security and Infrastructure-as-code within Azure.
+My name is Sebastian and I am currently working as a Solutions Architect at Fora with primary focus on PowerShell, Security and Infrastructure-as-code within Azure.
 
 [Fora @ LinkedIn](https://www.linkedin.com/company/fora-ab)
 
