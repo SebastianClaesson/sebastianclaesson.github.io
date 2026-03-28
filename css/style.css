@@ -1073,6 +1073,18 @@ main {
 }
 
 /* Light mode overrides */
+[data-theme="light"] .nav-social a {
+  color: #1a1d2e;
+}
+
+[data-theme="light"] .nav-social a:hover {
+  color: var(--accent);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .nav-social a { color: #1a1d2e; }
+  :root:not([data-theme="dark"]) .nav-social a:hover { color: var(--accent); }
+}
 [data-theme="light"] .hero::before,
 :root:not([data-theme="dark"]) .hero::before {
   background: radial-gradient(ellipse at center,
