@@ -167,9 +167,26 @@ steps:
 
 <p>One thing to remember: you need a <code>.nojekyll</code> file in your repo root. Without it, GitHub Pages assumes your site is Jekyll and tries to build it, which can cause files to be ignored or processed incorrectly. It's just an empty file, but forgetting it will cause headaches.</p>
 
+<h1>The polish loop</h1>
+
+<p>What surprised me the most was what happened after the initial migration. The site was functional, but the real value came from the rapid iteration that followed. In the same session, I kept throwing requests at Claude Code and watching them land within seconds:</p>
+
+<ul>
+  <li>The dark mode felt too dark, so we lifted the background colors a few notches until it felt right</li>
+  <li>Light mode had grey icons and nav text that should have been black. Fixed across all 13 pages instantly</li>
+  <li>Hover states were inconsistent between nav links and social icons. Made them all go accent blue</li>
+  <li>Swapped the font from Inter to Plus Jakarta Sans across every page</li>
+  <li>Added a floating "back to posts" button that sits next to the scroll-to-top button, so readers can always navigate back without scrolling to the header</li>
+  <li>Generated an avatar using ChatGPT and replaced the favicon and nav logo with it</li>
+</ul>
+
+<p>Each of these was a one-line request from me and a near-instant change across the whole site. The kind of tweaks that would normally pile up in a "I'll fix it later" list actually got done on the spot. That feedback loop is what made this feel less like a migration project and more like a conversation with a very fast colleague.</p>
+
 <h1>Takeaway</h1>
 
 <p>Sometimes the best framework is no framework. My blog loads instantly, I can edit it in any text editor, and the deployment pipeline is 4 lines of YAML. That's hard to beat.</p>
+
+<p>But the real takeaway for me was how well AI-assisted development works for this kind of project. Not just the initial build, but the ongoing back-and-forth of "this doesn't feel right, change it" until it does. The entire migration, including all the polish, happened in a single sitting.</p>
 
 <p>//Sebastian</p>
 
@@ -181,6 +198,7 @@ steps:
               <li><a href="#">What I ended up with</a></li>
               <li><a href="#">The migration process</a></li>
               <li><a href="#">Old vs new pipeline</a></li>
+              <li><a href="#">The polish loop</a></li>
               <li><a href="#">Takeaway</a></li>
             </ul>
           </aside>
