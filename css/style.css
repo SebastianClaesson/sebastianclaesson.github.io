@@ -146,7 +146,7 @@ img {
 }
 
 .theme-toggle:hover {
-  color: var(--text-primary);
+  color: var(--accent);
   background: var(--bg-tertiary);
 }
 
@@ -251,7 +251,7 @@ img {
 }
 
 .nav-social a:hover {
-  color: var(--text-primary);
+  color: var(--accent);
   background: var(--bg-tertiary);
 }
 
