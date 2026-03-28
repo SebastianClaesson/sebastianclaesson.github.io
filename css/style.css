@@ -1022,6 +1022,51 @@ main {
   height: 18px;
 }
 
+/* Back to posts (floating, post pages only) */
+.back-to-posts {
+  position: fixed;
+  bottom: 2rem;
+  right: 5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-decoration: none;
+  z-index: 50;
+  transition: all var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.back-to-posts:hover {
+  color: var(--accent);
+  border-color: rgba(123, 154, 255, 0.3);
+  background: var(--bg-card-hover);
+  box-shadow: var(--shadow);
+}
+
+.back-to-posts svg {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 600px) {
+  .back-to-posts span {
+    display: none;
+  }
+  .back-to-posts {
+    padding: 0.6rem;
+    border-radius: 50%;
+    right: 4.5rem;
+  }
+}
+
 /* ========================================
    Highlight.js theme overrides (dark)
    ======================================== */
