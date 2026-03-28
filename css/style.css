@@ -1078,7 +1078,9 @@ main {
 
 /* Light mode overrides */
 [data-theme="light"] .nav-social a,
-[data-theme="light"] .theme-toggle {
+[data-theme="light"] .theme-toggle,
+[data-theme="light"] .nav-links a,
+[data-theme="light"] .cat-btn {
   color: #1a1d2e;
 }
 
@@ -1089,7 +1091,9 @@ main {
 
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) .nav-social a,
-  :root:not([data-theme="dark"]) .theme-toggle { color: #1a1d2e; }
+  :root:not([data-theme="dark"]) .theme-toggle,
+  :root:not([data-theme="dark"]) .nav-links a,
+  :root:not([data-theme="dark"]) .cat-btn { color: #1a1d2e; }
   :root:not([data-theme="dark"]) .nav-social a:hover,
   :root:not([data-theme="dark"]) .theme-toggle:hover { color: var(--accent); }
 }
