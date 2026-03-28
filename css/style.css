@@ -1073,17 +1073,21 @@ main {
 }
 
 /* Light mode overrides */
-[data-theme="light"] .nav-social a {
+[data-theme="light"] .nav-social a,
+[data-theme="light"] .theme-toggle {
   color: #1a1d2e;
 }
 
-[data-theme="light"] .nav-social a:hover {
+[data-theme="light"] .nav-social a:hover,
+[data-theme="light"] .theme-toggle:hover {
   color: var(--accent);
 }
 
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) .nav-social a { color: #1a1d2e; }
-  :root:not([data-theme="dark"]) .nav-social a:hover { color: var(--accent); }
+  :root:not([data-theme="dark"]) .nav-social a,
+  :root:not([data-theme="dark"]) .theme-toggle { color: #1a1d2e; }
+  :root:not([data-theme="dark"]) .nav-social a:hover,
+  :root:not([data-theme="dark"]) .theme-toggle:hover { color: var(--accent); }
 }
 [data-theme="light"] .hero::before,
 :root:not([data-theme="dark"]) .hero::before {
