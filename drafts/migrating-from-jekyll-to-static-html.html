@@ -17,7 +17,7 @@
   <link rel="icon" href="../assets/images/Sebastian-Avatar-Hoodie.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQDR23C4VN"></script>
@@ -99,18 +99,20 @@
 ├── css/style.css       # Dark/light mode
 ├── js/main.js          # Search, filter, theme toggle
 ├── assets/images/      # All images
-├── sitemap.xml
-├── robots.txt
-└── .nojekyll</code></pre>
+├── sitemap.xml         # SEO: all posts with last modified dates
+├── robots.txt          # SEO: points crawlers to sitemap
+└── .nojekyll           # Tells GitHub Pages to skip Jekyll</code></pre>
 
 <p>GitHub Pages serves it directly. The GitHub Actions workflow went from "install Ruby, bundle gems, run deploy script" to "upload files, deploy". That's it.</p>
+
+<p>For SEO, the site includes a <code>sitemap.xml</code> that lists all posts with their last modified dates and a <code>robots.txt</code> that points search engines to the sitemap. With Jekyll, the <code>jekyll-sitemap</code> plugin generated these automatically. Without a build step, they're just static files that I update manually when adding new posts.</p>
 
 <h1>The migration process</h1>
 
 <p>I used <a href="https://claude.ai/code">Claude Code</a> to do the heavy lifting. The whole thing happened in a single session.</p>
 
 <h2>1. Analyze the old site</h2>
-<p>First step was reading through the existing Jekyll structure: <code>_config.yml</code>, all 8 markdown posts, the about page, and the image assets. This gave Claude the full picture of what content existed and how it was structured.</p>
+<p>First step was reading through the existing Jekyll structure: <code>_config.yml</code>, all the markdown posts, the about page, and the image assets. This gave Claude the full picture of what content existed and how it was structured.</p>
 
 <h2>2. Build the new site in a staging folder</h2>
 <p>Everything was built under a <code>New Blog/</code> folder so I could preview it before replacing anything. The design was written from scratch: a modern dark theme with Inter font, code highlighting via highlight.js, and responsive layout.</p>
@@ -120,7 +122,7 @@
 <h2>3. Add features iteratively</h2>
 <p>Once the base was working, I kept adding things through conversation:</p>
 <ul>
-  <li><strong>Draft system</strong>: Posts in a <code>drafts/</code> folder, visible only with <code>?drafts=true</code> in the URL</li>
+  <li><strong>Draft system</strong>: A simple way to preview unpublished posts before going live</li>
   <li><strong>Search</strong>: Client-side text search across titles, descriptions and tags</li>
   <li><strong>Category filtering</strong>: Buttons that filter posts by topic (Azure, PowerShell, Security, etc.)</li>
   <li><strong>Dark/light mode</strong>: System preference detection with manual toggle, saved to localStorage</li>
@@ -130,8 +132,7 @@
 <h2>4. Review and polish</h2>
 <p>This is where most of the back-and-forth happened. Things like:</p>
 <ul>
-  <li>Making sure Swedish characters (Björn, Västerås, Wåhlin) were correct UTF-8</li>
-  <li>Removing em-dashes from AI-generated text (they're a dead giveaway)</li>
+  <li>Making sure Swedish characters rendered correctly with proper UTF-8 encoding</li>
   <li>Adjusting the dark theme to be less aggressively dark</li>
   <li>Getting the avatar and favicon right</li>
   <li>Verifying all image paths resolved after moving files around</li>
@@ -164,11 +165,7 @@ steps:
 
 <p>No Ruby. No bundler. No deploy script. The build is basically "copy files to GitHub Pages".</p>
 
-<h1>What I'd do differently</h1>
-
-<p>If I were starting fresh today with 50+ posts, I'd probably use a lightweight static site generator like Eleventy or Astro to avoid maintaining individual HTML files. But for 11 posts, raw HTML is perfectly manageable and I understand every line of it.</p>
-
-<p>The draft system could also be smarter. Right now it's just a folder + query parameter. If I write more frequently, I might want a proper build step that excludes drafts from production. But for now, it works.</p>
+<p>One thing to remember: you need a <code>.nojekyll</code> file in your repo root. Without it, GitHub Pages assumes your site is Jekyll and tries to build it, which can cause files to be ignored or processed incorrectly. It's just an empty file, but forgetting it will cause headaches.</p>
 
 <h1>Takeaway</h1>
 
@@ -184,7 +181,6 @@ steps:
               <li><a href="#">What I ended up with</a></li>
               <li><a href="#">The migration process</a></li>
               <li><a href="#">Old vs new pipeline</a></li>
-              <li><a href="#">What I'd do differently</a></li>
               <li><a href="#">Takeaway</a></li>
             </ul>
           </aside>
