@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="100" fill="#1a1d2e"/>
+  <circle cx="100" cy="100" r="97" fill="none" stroke="#6c8cff" stroke-width="2" opacity="0.3"/>
+
+  <!-- Neck -->
+  <path d="M80 145 Q80 160 75 175 L125 175 Q120 160 120 145" fill="#d4a574"/>
+
+  <!-- Shirt / Jacket -->
+  <path d="M55 175 Q65 160 75 155 L80 148 Q90 155 100 155 Q110 155 120 148 L125 155 Q135 160 145 175 L145 200 L55 200 Z" fill="#3d5244"/>
+  <!-- Collar -->
+  <path d="M80 148 Q90 158 100 155 Q110 158 120 148 L118 155 Q108 165 100 162 Q92 165 82 155 Z" fill="#8ba3c4"/>
+
+  <!-- Head shape -->
+  <ellipse cx="100" cy="105" rx="42" ry="50" fill="#d4a574"/>
+
+  <!-- Hair -->
+  <path d="M58 95 Q58 55 100 50 Q142 55 142 95 Q140 75 130 68 Q120 60 100 58 Q80 60 70 68 Q60 75 58 95Z" fill="#3a2a1a"/>
+  <!-- Hair sides -->
+  <path d="M58 95 Q56 105 58 115 Q60 105 62 98 Z" fill="#3a2a1a"/>
+  <path d="M142 95 Q144 105 142 115 Q140 105 138 98 Z" fill="#3a2a1a"/>
+  <!-- Hair top texture -->
+  <path d="M70 68 Q85 62 100 60 Q90 58 75 63 Z" fill="#4a3828" opacity="0.5"/>
+  <path d="M130 68 Q115 62 100 60 Q110 58 125 63 Z" fill="#4a3828" opacity="0.5"/>
+
+  <!-- Eyes -->
+  <ellipse cx="82" cy="102" rx="7" ry="5" fill="white"/>
+  <ellipse cx="118" cy="102" rx="7" ry="5" fill="white"/>
+  <circle cx="83" cy="102" r="3.5" fill="#3a2a1a"/>
+  <circle cx="119" cy="102" r="3.5" fill="#3a2a1a"/>
+  <circle cx="84" cy="101" r="1.2" fill="white"/>
+  <circle cx="120" cy="101" r="1.2" fill="white"/>
+
+  <!-- Eyebrows -->
+  <path d="M73 93 Q78 89 91 91" stroke="#3a2a1a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M127 93 Q122 89 109 91" stroke="#3a2a1a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+  <!-- Nose -->
+  <path d="M100 105 Q97 115 95 118 Q100 120 105 118 Q103 115 100 105" fill="#c49a68" opacity="0.6"/>
+
+  <!-- Mouth - slight friendly smile -->
+  <path d="M88 128 Q94 134 100 134 Q106 134 112 128" stroke="#b07850" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+  <!-- Ears -->
+  <ellipse cx="58" cy="108" rx="6" ry="10" fill="#d4a574"/>
+  <ellipse cx="142" cy="108" rx="6" ry="10" fill="#d4a574"/>
+
+  <!-- Subtle stubble dots -->
+  <circle cx="85" cy="135" r="0.5" fill="#8a6a4a" opacity="0.3"/>
+  <circle cx="90" cy="137" r="0.5" fill="#8a6a4a" opacity="0.3"/>
+  <circle cx="95" cy="138" r="0.5" fill="#8a6a4a" opacity="0.3"/>
+  <circle cx="105" cy="138" r="0.5" fill="#8a6a4a" opacity="0.3"/>
+  <circle cx="110" cy="137" r="0.5" fill="#8a6a4a" opacity="0.3"/>
+  <circle cx="115" cy="135" r="0.5" fill="#8a6a4a" opacity="0.3"/>
+</svg>

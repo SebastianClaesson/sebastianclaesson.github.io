@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Azure AD Cross-tenant Collaboration / VNET Peering - Sebastian Claesson</title>
+  <meta name="description" content="Setting up cross-tenant virtual network peerings, B2B collaboration, detection using KQL, and how to protect your organization from cross-tenant attacks.">
+  <meta name="author" content="Sebastian Claesson">
+  <meta name="keywords" content="Azure AD, Cross-tenant, VNET Peering, B2B Collaboration, Network Security, KQL, Azure Policy">
+  <link rel="canonical" href="https://blog.sebastianclaesson.se/posts/azure-cross-tenant-collaboration/">
+  <meta property="og:title" content="Azure AD Cross-tenant Collaboration / VNET Peering">
+  <meta property="og:description" content="Cross-tenant VNET peering setup, detection, and prevention.">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2023-04-03">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@SebClaesson">
+  <link rel="icon" href="../assets/images/Sebastian-Avatar-Hoodie.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQDR23C4VN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LQDR23C4VN');
+  </script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="../index.html" class="site-logo"><img src="../assets/images/Sebastian-Avatar-Hoodie.png" alt="" style="width:32px;height:32px;border-radius:8px;object-fit:cover;">Sebastian Claesson</a>
+      <button class="nav-toggle" aria-label="Toggle navigation"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <nav class="nav-menu">
+        <ul class="nav-links">
+          <li><a href="../index.html">Blog</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+        <div class="nav-social">
+          <a href="https://github.com/SebastianClaesson" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
+          <a href="https://www.linkedin.com/in/sebastianclaesson" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+                  <button class="theme-toggle" aria-label="Toggle theme"><svg class="icon-sun" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg><svg class="icon-moon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></button>n      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <article>
+        <div class="post-header">
+          <h1>Azure AD Cross-tenant Collaboration / VNET Cross-tenant Peering</h1>
+          <div class="post-meta">
+            <span class="post-meta-item">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              April 3, 2023
+            </span>
+            <span class="post-meta-item">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Sebastian Claesson
+            </span>
+            <div class="post-categories">
+              <span>Azure</span>
+              <span>Cross-tenant</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="post-layout">
+          <div class="post-content">
+
+<p>The possibility to create Virtual network peerings across Azure Active Directory tenants has been available since 2018. It's a feature which is allowed by default and is quite easy to setup and get started with. It helps provide private networking between two Azure AD tenants subscriptions and can be an alternative to private link/private endpoints etc.</p>
+
+<p>This post will go through the setup and requirements, but also how you can detect cross-tenant collaboration &amp; blocking it. I will not deep-dive into all the toolings around it, such as Conditional access or other features you get available by using <a href="https://learn.microsoft.com/en-us/azure/active-directory/authentication/concept-mfa-licensing">Azure AD Premium</a>.</p>
+
+<h2>Azure AD settings &amp; invitation process</h2>
+
+<p>Tenant A is a new Tenant, out-of-box, with no customization done to External collaboration settings.</p>
+<img src="../assets/images/2023/SourceGuestSettings.png" alt="Tenant A External Collaboration settings">
+<p>This means that anyone in the Tenant A organization can invite guest users and that it may be sent to any domain.</p>
+
+<div class="callout info">
+  <p>Reference: <a href="https://learn.microsoft.com/en-us/azure/active-directory/external-identities/cross-tenant-access-overview#default-settings">Cross-tenant access settings</a></p>
+</div>
+
+<p>We attempt to reach the Azure AD Tenant A from the user in Tenant B, without being invited as a guest to that tenant.</p>
+<img src="../assets/images/2023/TenantBInteractionWithoutInvitation.png" alt="Tenant B interaction attempt without invitation">
+
+<p>If you are inviting a user that does not have an E-mail address, you can use PowerShell to create and consume an invitation.</p>
+
+<pre><code class="language-powershell">$params = @{
+    InvitedUserDisplayName = "Sebastian Guest user"
+    InvitedUserEmailAddress = "sebastian.claesson@contoso.com"
+    InviteRedirectUrl = "https://myapplications.microsoft.com"
+    SendInvitationMessage = $false
+}
+$Invite = New-MgInvitation @params
+
+$invite |
+select-object Id, InviteRedeemUrl, InvitedUserDisplayName, InvitedUserEmailAddress, InvitedUserType, Status, @{'n'='UserId';'E'={$_.InvitedUser.Id}} |
+ConvertTo-Json</code></pre>
+
+<p>Once we consume the InviteRedeemUrl, we simply go to the invited user's context and browse to the link.</p>
+<img src="../assets/images/2023/TenantBInvitationRedeemProcess.png" alt="Tenant B invitation redeem process">
+
+<p>Once the invitation has been accepted, we can verify that the user has been created in Tenant A:</p>
+
+<pre><code class="language-powershell">Get-MgUser -userId $Invite.InvitedUser.Id
+
+# Output
+Id                : a9cf0759-4de1-4ee2-85a6-47ff8f4e34f0
+DisplayName       : Sebastian Claesson
+UserPrincipalName : sebastian.claesson_contoso.com#EXT#@tenantA.onmicrosoft.com</code></pre>
+
+<h2>Establishing a network peering from Tenant B to Tenant A</h2>
+
+<img src="../assets/images/2023/TenantBtoTenantAPeerAttempt1.png" alt="Tenant B peering attempt">
+
+<p>We receive an error that the client does not have permission to perform action 'peer/action' on the linked scope. We'll assign our Tenant B user the role of "Network Contributor" in the correct subscription of Tenant A and make a new attempt.</p>
+
+<pre><code class="language-powershell">Get-AzVirtualNetworkPeering -VirtualNetworkName "vnet-demo-test" -ResourceGroupName "demo-test-rg" |
+Select Name, @{'N'='RemoteVnetId';'E'={$_.RemoteVirtualNetwork.Id}}, PeeringSyncLevel, PeeringState, ProvisioningState | fl
+
+# Output
+Name              : TenantB2TenantA
+RemoteVnetId      : /subscriptions/.../providers/Microsoft.Network/virtualNetworks/demo-vnet
+PeeringSyncLevel  : RemoteNotInSync
+PeeringState      : Initiated
+ProvisioningState : Succeeded</code></pre>
+
+<p>The peering has been initiated but not completed. We need to establish a peer from Tenant A to Tenant B as well.</p>
+<img src="../assets/images/2023/TenantAVnetPeerStatus.png" alt="Tenant A peering status">
+
+<p>After establishing both sides, we can confirm the peering:</p>
+<img src="../assets/images/2023/TenantBVMRoutes.png" alt="Tenant B VM effective routes showing cross-tenant peering">
+
+<h1>How do we protect our Organization?</h1>
+
+<p>You might ask yourself "How do we protect our employees/organization from accidentally allowing cross-tenant virtual network peerings to prevent data exfiltration?"</p>
+
+<h2>Outbound blocked</h2>
+<p>If we set the Outbound access settings for B2B collaboration to "All blocked", we can <strong>still</strong> establish a network peering.</p>
+
+<h2>Inbound blocked</h2>
+<p>If we set the Inbound access settings for B2B collaboration to "All blocked", we are <strong>unable</strong> to establish a peer from Tenant B to Tenant A.</p>
+<img src="../assets/images/2023/TenantAPeeringWithTenantBBlockingMessage.png" alt="Tenant A blocking inbound cross-tenant peering">
+
+<h2>Detection</h2>
+<p>There's a workbook published in Azure AD called "<a href="https://learn.microsoft.com/en-us/azure/active-directory/reports-monitoring/workbook-cross-tenant-access-activity">Cross-tenant access activity</a>" that you can utilize if logs are streamed to a log analytics workspace.</p>
+
+<pre><code class="language-sql">SigninLogs
+    | project TimeGenerated,
+        UserPrincipalName,
+        HomeTenantId,
+        AADTenantId,
+        ResourceTenantId,
+        ResourceDisplayName,
+        Status,
+        UserType,
+        UserId
+    | where UserId != "00000000-0000-0000-0000-000000000000"
+    | where HomeTenantId != ''
+    | where HomeTenantId != AADTenantId
+    | extend status = case(Status.errorCode == 0, "Success", "Failure")</code></pre>
+
+<img src="../assets/images/2023/kqlexample.png" alt="KQL query results showing cross-tenant activity">
+
+<h2>Summary</h2>
+<p>It's a good idea to keep track of possible cross-tenant integrations, whether it's virtual network peerings, private links, private endpoints or service endpoints. This post only covers some of these points and how it can be prevented using methods other than Azure policy or Azure monitor/alert.</p>
+
+<p><em>This post resulted in a pull request to update Microsoft Learn documentation on <a href="https://github.com/MicrosoftDocs/azure-docs/pull/107640">Pull Request 107640</a>.</em></p>
+
+          </div>
+          <aside class="toc">
+            <div class="toc-title">On this page</div>
+            <ul>
+              <li><a href="#">Azure AD settings</a></li>
+              <li><a href="#">Network peering setup</a></li>
+              <li><a href="#">Protection</a></li>
+              <li><a href="#">Detection with KQL</a></li>
+              <li><a href="#">Summary</a></li>
+            </ul>
+          </aside>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>&copy; 2026 Sebastian Claesson</span>
+      <a href="../index.html">&larr; Back to all posts</a>
+    </div>
+  </footer>
+
+  <button class="back-to-top" aria-label="Back to top"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg></button>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>

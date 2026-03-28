@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PowerShell Azure Function - Managed Identity & Triggers/Bindings - Sebastian Claesson</title>
+  <meta name="description" content="Building Azure Functions with PowerShell using managed identity, storage queue triggers and SendGrid output bindings for alerting.">
+  <meta name="author" content="Sebastian Claesson">
+  <meta name="keywords" content="PowerShell, Azure Functions, Managed Identity, Queue Trigger, SendGrid, Bicep, Infrastructure as Code">
+  <link rel="canonical" href="https://blog.sebastianclaesson.se/posts/azure-functions/">
+  <meta property="og:title" content="PowerShell Azure Function - Managed Identity & Triggers/Bindings">
+  <meta property="og:description" content="Building Azure Functions with PowerShell using managed identity, storage queue triggers and SendGrid output bindings.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://blog.sebastianclaesson.se/posts/azure-functions/">
+  <meta property="article:published_time" content="2022-08-11">
+  <meta property="article:author" content="Sebastian Claesson">
+  <meta property="article:tag" content="PowerShell">
+  <meta property="article:tag" content="Azure Functions">
+  <meta property="article:tag" content="Managed Identity">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@SebClaesson">
+  <link rel="icon" href="../assets/images/Sebastian-Avatar-Hoodie.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQDR23C4VN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LQDR23C4VN');
+  </script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="../index.html" class="site-logo">
+        <img src="../assets/images/Sebastian-Avatar-Hoodie.png" alt="" style="width:32px;height:32px;border-radius:8px;object-fit:cover;">
+        Sebastian Claesson
+      </a>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <nav class="nav-menu">
+        <ul class="nav-links">
+          <li><a href="../index.html">Blog</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+        <div class="nav-social">
+          <a href="https://github.com/SebastianClaesson" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
+          <a href="https://www.linkedin.com/in/sebastianclaesson" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+                  <button class="theme-toggle" aria-label="Toggle theme"><svg class="icon-sun" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg><svg class="icon-moon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></button>n      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <article>
+        <div class="post-header">
+          <h1>PowerShell Azure Function - Managed Identity & Triggers/Bindings</h1>
+          <div class="post-meta">
+            <span class="post-meta-item">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              August 11, 2022
+            </span>
+            <span class="post-meta-item">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Sebastian Claesson
+            </span>
+            <div class="post-categories">
+              <span>Azure</span>
+              <span>Function App</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="post-layout">
+          <div class="post-content">
+
+<p>I've been playing around a little with Azure Functions and Azure Alerting. The design was to be able to utilize the Azure Alert rule processing function in Azure and have it create a prettier mail than what comes out of box.</p>
+
+<p>Basically the design boiled down to having a few Azure Functions running a bit of PowerShell and a storage account with some tables and queues.</p>
+
+<p>First of all we'll need a Function app with a managed identity. For this project I've decided to use a System Assigned identity for my Function app.</p>
+
+<p>I'll deploy a bicep with the following settings to my Function app:</p>
+
+<pre><code class="language-bicep">var location = resourceGroup().location
+
+resource storageAccount 'Microsoft.Storage/storageAccounts@2021-09-01' = {
+  name: 'stalertdemo'
+  kind: 'StorageV2'
+  location: location
+  sku: {
+    name: 'Standard_LRS'
+  }
+  properties: {
+    allowBlobPublicAccess: false
+    allowSharedKeyAccess: true
+    accessTier: 'Hot'
+    supportsHttpsTrafficOnly: true
+  }
+}
+
+resource queueService 'Microsoft.Storage/storageAccounts/queueServices@2021-09-01' = {
+  name: 'default'
+  parent: storageAccount
+}
+
+resource sendgrid 'Microsoft.Storage/storageAccounts/queueServices/queues@2021-09-01' = {
+  name: 'sendgrid'
+  parent: queueService
+}
+
+resource tableService 'Microsoft.Storage/storageAccounts/tableServices@2021-09-01' = {
+  name: 'default'
+  parent: storageAccount
+}
+
+resource keyvault 'Microsoft.KeyVault/vaults@2021-10-01' = {
+  name: 'alertdemo-kv'
+  location: location
+  properties: {
+    enabledForDeployment: false
+    enabledForDiskEncryption: false
+    enabledForTemplateDeployment: false
+    enableRbacAuthorization: true
+    enableSoftDelete: false
+    tenantId: subscription().tenantId
+    sku: {
+      name: 'standard'
+      family: 'A'
+    }
+  }
+}
+
+resource appServicePlan 'Microsoft.Web/serverfarms@2020-12-01' = {
+  name: 'alertdemo-plan'
+  location: location
+  sku: {
+    tier: 'Dynamic'
+    name: 'Y1'
+  }
+}
+
+resource functionApp 'Microsoft.Web/sites@2022-03-01' = {
+  name: 'alertdemo-app'
+  location: location
+  kind: 'functionapp'
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties: {
+    serverFarmId: appServicePlan.id
+    httpsOnly: true
+    clientAffinityEnabled: false
+    siteConfig: {
+      cors: {
+        allowedOrigins: [
+          'https://azure.portal.com'
+        ]
+      }
+      powerShellVersion: '7.2'
+      netFrameworkVersion: 'v6.0'
+      ftpsState: 'Disabled'
+    }
+  }
+}
+
+resource functionAppSettings 'Microsoft.Web/sites/config@2020-06-01' = {
+  parent: functionApp
+  name: 'appsettings'
+  properties: {
+    AzureWebJobsDisableHomepage: 'true'
+    AzureWebJobsSecretStorageKeyVaultUri: keyvault.properties.vaultUri
+    AzureWebJobsSecretStorageType: 'keyvault'
+    AzureWebJobsStorage__accountName: storageAccount.name
+    FUNCTIONS_APP_EDIT_MODE: 'readonly'
+    StorageQueueConnection__credential: 'managedidentity'
+    StorageQueueConnection__queueServiceUri: storageAccount.properties.primaryEndpoints.queue
+    WEBSITE_RUN_FROM_PACKAGE: '1'
+    FUNCTIONS_WORKER_RUNTIME: 'powershell'
+    FUNCTIONS_EXTENSION_VERSION: '~4'
+  }
+}</code></pre>
+
+<p>The bicep file will now create/configure:</p>
+<ol>
+  <li>Create a Azure Storage Account with queue and table services enabled.</li>
+  <li>Create a queue called sendgrid</li>
+  <li>Store secrets in keyvault (such as the master/function keys) using the managed identity.</li>
+  <li>Create a StorageQueueConnection object that will use my Storage Accounts queue endpoint and connect to that using the managed identity.</li>
+</ol>
+
+<div class="callout info">
+  <p>The bicep file is not complete and is missing resources such as role assignments etc. This just a demonstration of how to set the application settings.</p>
+</div>
+
+<p>Once the infrastructure is in place, you can now create the structure for your function app. If you're familiar with zip deployments/function bindings, this will be easy. However, if you are not familiar with it, I suggest reading about it at <a href="https://docs.microsoft.com/en-us/azure/azure-functions/deployment-zip-push">Zip-deploy</a> &amp; <a href="https://docs.microsoft.com/en-us/azure/azure-functions/functions-triggers-bindings?tabs=powershell">Function Triggers and Bindings</a>.</p>
+
+<p><strong>Brief explanation of the triggers/bindings.</strong></p>
+
+<p><em>You can specify both in- and output bindings. There's bindings that you can use from the open source community or included in the function runtime. Read more about the runtime <a href="https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-register#extension-bundles">extension bundle</a>.</em></p>
+
+<p>In my scenario, I'll create a input binding that uses the Azure Storage Queue trigger. For my function it will have a function.json in it's folder, containing the following configuration:</p>
+
+<pre><code class="language-json">{
+  "bindings": [
+    {
+      "name": "QueueItem",
+      "type": "queueTrigger",
+      "direction": "in",
+      "queueName": "sendgrid",
+      "connection": "StorageQueueConnection"
+    }
+  ]
+}</code></pre>
+
+<p>As you can see there's a queueTrigger binding called "QueueItem". It also has a queueName which is the name of the queue, and a connection.</p>
+
+<p>The binding will use the StorageQueueConnection "object" specified in my function app settings to retrieve the connection, as we specified in the bicep template.</p>
+
+<p>The "object" can contain several settings, which you can read more about here <a href="https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference?tabs=blob#common-properties-for-identity-based-connections">Common properties for identity based connections</a> &amp; <a href="https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference?tabs=blob#connecting-to-host-storage-with-an-identity-preview">Connecting to host storage with an identity (Preview)</a>.</p>
+
+<p>As you can see, I have no App Setting called "StorageQueueConnection", however I do have the following app settings:</p>
+
+<pre><code>StorageQueueConnection__credential: 'managedidentity'
+StorageQueueConnection__queueServiceUri: storageAccount.properties.primaryEndpoints.queue</code></pre>
+
+<p>Together these app settings form the connection object. When the runtime is running a sync cycle, it will try and parse my settings that is prefixed with "StorageQueueConnection" and followed by two underscores. In my case, it will try to connect to my Azure Storage Account Queue endpoint using the Function app managed identity.</p>
+
+<div class="callout info">
+  <p>In order for this to work, you'll have to make sure that the managed identity has at least the Storage Queue Data Contributor role.</p>
+</div>
+
+<p>The configuration for the Azure Storage Account Queue settings can be set in the host.json file for the Function app. For our Function app, we'll use the following configuration:</p>
+
+<pre><code class="language-json">{
+  "version": "2.0",
+  "extensionBundle": {
+    "id": "Microsoft.Azure.Functions.ExtensionBundle",
+    "version": "[3.11.0, 4.0.0)"
+  },
+  "extensions": {
+    "queues": {
+      "maxPollingInterval": "00:00:02",
+      "visibilityTimeout": "00:00:30",
+      "batchSize": 5,
+      "maxDequeueCount": 5,
+      "newBatchThreshold": 8,
+      "messageEncoding": "base64"
+    }
+  }
+}</code></pre>
+
+<p>This will configure our app to check the queue every 2 seconds. More about this can be found here <a href="https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-queue?tabs=in-process%2Cextensionv5%2Cextensionv3&pivots=programming-language-powershell">queue extension settings</a>.</p>
+
+<p>After adding some PowerShell magic to our function app it will now parse the data passed down by the queue to the function.</p>
+
+<pre><code class="language-powershell">using namespace System.Net
+# Input bindings are passed in via param block.
+param($QueueItem, $TriggerMetadata)
+Write-Information "Queue item insertion time: $($TriggerMetadata.InsertionTime)"
+Write-Information $QueueItem</code></pre>
+
+<div class="callout info">
+  <p>The parameter must match the name set in the function.json file, in our case 'QueueItem'</p>
+</div>
+
+<p>This PowerShell script will only output the insertion time and the data of the message found in the queue.</p>
+
+<p>We will make it more interesting in our case, and add a new output binding for SendGrid. To enable the output binding for SendGrid we will have to go back to our function.json file and add the following rows:</p>
+
+<pre><code class="language-json">{
+  "bindings": [
+    {
+      "name": "QueueItem",
+      "type": "queueTrigger",
+      "direction": "in",
+      "queueName": "sendgrid",
+      "connection": "StorageQueueConnection"
+    },
+    {
+      "type": "sendGrid",
+      "direction": "out",
+      "name": "message",
+      "apikey": "&lt;input api key&gt;"
+    }
+  ]
+}</code></pre>
+
+<p>Now as you can see, we have added a new output binding of the type sendGrid in the out direction. We'll give it the name message.</p>
+
+<p>To understand how the sendGrid output binding works, we can read the help docs at <a href="https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-sendgrid?tabs=in-process%2Cfunctionsv2&pivots=programming-language-powershell#configuration">SendGrid configuration</a>.</p>
+
+<div class="callout info">
+  <p>To get your API key and getting started with SendGrid, you can read more here: <a href="https://www.twilio.com/blog/send-emails-csharp-dotnet-with-azure-functions-and-sendgrid-bindings">SendGrid - Getting started</a>.</p>
+</div>
+
+<div class="callout tip">
+  <p>I strongly suggest that you keep this secret inside of an Azure Keyvault and have a reference to it inside your function app setting.</p>
+</div>
+
+<p>But to keep it short, we'll add the following code to our PowerShell script.</p>
+
+<pre><code class="language-powershell">$mail = @{
+    "personalizations" = @(
+        @{
+            "to" = [System.Collections.ArrayList]@(@{"email" = "user@contoso.com"})
+        }
+    )
+    "from"             = @{
+        "email" = "user@contoso.com"
+    }
+    "subject"          = "New message!"
+    "content"          = @(
+        @{
+            "type" = "text"
+            "value" = "A new message was put on the queue!"
+        }
+    )
+}
+# Send the email using the output binding for SendGrid.
+Push-OutputBinding -Name message -Value (ConvertTo-Json -InputObject $mail -Depth 100)</code></pre>
+
+<p>Now the output binding will try to send an api call to SendGrid with our message. The simple message will look like this:</p>
+
+<img src="../assets/images/2022/2022-08-16-1.png" alt="Simple mail output from SendGrid">
+
+<p>To make it more advanced you can also send a html file, in my case I'll use a html template file with some placeholders which we'll search and replace during runtime and using the information passed down by the message. Simply change the content-type to "text/html" when posting to the output binding, if you like pretty mails :)</p>
+
+<img src="../assets/images/2022/2022-08-16-2.png" alt="HTML mail output from SendGrid">
+
+<p>Thank you for reading and hopefully my notes will be found useful!</p>
+<p>//Sebastian</p>
+
+          </div>
+
+          <aside class="toc">
+            <div class="toc-title">On this page</div>
+            <ul>
+              <li><a href="#">Infrastructure (Bicep)</a></li>
+              <li><a href="#">Queue Trigger Binding</a></li>
+              <li><a href="#">Host Configuration</a></li>
+              <li><a href="#">SendGrid Output Binding</a></li>
+            </ul>
+          </aside>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>&copy; 2026 Sebastian Claesson</span>
+      <a href="../index.html">&larr; Back to all posts</a>
+    </div>
+  </footer>
+
+  <button class="back-to-top" aria-label="Back to top">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generating Azure Policies with Claude AI - Sebastian Claesson</title>
+  <meta name="description" content="How I used Claude AI to generate custom Azure Policies for MySQL Flexible Server and resource-specific diagnostic settings - saving days of manual work.">
+  <meta name="author" content="Sebastian Claesson">
+  <meta name="keywords" content="Azure Policy, Claude AI, MySQL Flexible Server, Diagnostic Settings, EPAC, Enterprise Policy as Code, Infrastructure as Code, AI">
+  <link rel="canonical" href="https://blog.sebastianclaesson.se/posts/azure-policy-generation-with-claude/">
+  <meta property="og:title" content="Generating Azure Policies with Claude AI">
+  <meta property="og:description" content="How AI saved days of manual work generating custom Azure Policies.">
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2026-03-13">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@SebClaesson">
+  <link rel="icon" href="../assets/images/Sebastian-Avatar-Hoodie.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQDR23C4VN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LQDR23C4VN');
+  </script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="../index.html" class="site-logo"><img src="../assets/images/Sebastian-Avatar-Hoodie.png" alt="" style="width:32px;height:32px;border-radius:8px;object-fit:cover;">Sebastian Claesson</a>
+      <button class="nav-toggle" aria-label="Toggle navigation"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      <nav class="nav-menu">
+        <ul class="nav-links">
+          <li><a href="../index.html">Blog</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+        <div class="nav-social">
+          <a href="https://github.com/SebastianClaesson" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
+          <a href="https://www.linkedin.com/in/sebastianclaesson" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+                  <button class="theme-toggle" aria-label="Toggle theme"><svg class="icon-sun" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg><svg class="icon-moon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></button>n      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <article>
+        <div class="post-header">
+          <h1>Generating Azure Policies with Claude AI</h1>
+          <div class="post-meta">
+            <span class="post-meta-item">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              March 13, 2026
+            </span>
+            <span class="post-meta-item">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Sebastian Claesson
+            </span>
+            <div class="post-categories">
+              <span>Azure Policy</span>
+              <span>AI</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="post-layout">
+          <div class="post-content">
+
+<h1>The Problem</h1>
+<p>Writing Azure Policies is tedious. Each policy requires understanding the ARM resource provider schema, knowing which aliases exist, writing the correct policy rule logic, and then bundling everything into initiatives with proper parameterization, non-compliance messages, and assignments. For a single resource type, this can easily take a full day of work.</p>
+
+<p>When we needed to create guardrails for <strong>MySQL Flexible Server</strong>, a resource with zero existing custom policies in the community, and <strong>resource-specific diagnostic settings</strong> for 38+ Azure services, I decided to try a different approach: <strong>using Claude AI to generate the policies</strong>.</p>
+
+<h1>The Approach</h1>
+
+<p>The key was providing Claude with the right context. I didn't just say "write me a policy". I gave it:</p>
+
+<ol>
+  <li><strong>The ARM resource provider schema</strong> for MySQL Flexible Server, so it understood exactly which properties and aliases were available</li>
+  <li><strong>Existing policy examples</strong> from our repository as reference for structure, naming conventions, and the EPAC (Enterprise Policy as Code) format we use</li>
+  <li><strong>Clear requirements</strong> for what each policy should enforce: SSL/TLS, minimum version, logging, encryption, public access restrictions</li>
+  <li><strong>The Enterprise Policy as Code (EPAC) schema</strong> and formatting conventions</li>
+</ol>
+
+<h2>MySQL Flexible Server: From Zero to 7 Policies</h2>
+
+<p>For MySQL Flexible Server, there were only a handful of built-in policies (around 5, covering things like public network access, Entra authentication and threat protection). But there were <strong>no custom policies</strong> for the more granular settings we needed. We had to create policies covering:</p>
+
+<ul>
+  <li><strong>Network isolation</strong>: Deny public access via firewall rules</li>
+  <li><strong>Authentication</strong>: Enforce Entra ID-only authentication</li>
+  <li><strong>Encryption</strong>: Require SSL/TLS connections, audit customer-managed keys</li>
+  <li><strong>Resilience</strong>: Audit geo-redundant backup</li>
+  <li><strong>Version compliance</strong>: Audit minimum MySQL version (8.0)</li>
+  <li><strong>Security logging</strong>: Deny FILE-based log output (PII risk), enforce TABLE-based audit logging, monitor slow query logs</li>
+</ul>
+
+<p>By providing the ARM template structure for MySQL Flexible Server and our existing policy patterns, Claude generated all 7 custom policy definitions in the correct JSONC format in under <strong>10 minutes</strong>. Each policy included proper aliases, parameter definitions, and descriptions.</p>
+
+<p>Here's an example of what was generated, a policy to block FILE-based log output to prevent accidental PII exposure:</p>
+
+<pre><code class="language-json">{
+  "name": "Deny-MySqlFlex-LogFileOutput",
+  "properties": {
+    "displayName": "MySQL Flexible Server should not use FILE-based log output",
+    "description": "Prevents MySQL Flexible Server from using FILE as the log output destination. FILE output writes logs to the local filesystem which may expose sensitive data. Use TABLE output instead.",
+    "mode": "Indexed",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.DBforMySQL/flexibleServers/configurations"
+          },
+          {
+            "field": "name",
+            "equals": "log_output"
+          },
+          {
+            "field": "Microsoft.DBforMySQL/flexibleServers/configurations/value",
+            "contains": "FILE"
+          }
+        ]
+      },
+      "then": {
+        "effect": "[parameters('effect')]"
+      }
+    }
+  }
+}</code></pre>
+
+<h2>Resource-Specific Diagnostic Settings: 38 Policies at Scale</h2>
+
+<p>The other major win was generating <strong>38 DeployIfNotExists policies</strong> for resource-specific diagnostic settings. Each policy needed to:</p>
+
+<ul>
+  <li>Target a specific Azure resource type</li>
+  <li>Deploy a diagnostic settings resource using an embedded ARM template</li>
+  <li>Use <code>logAnalyticsDestinationType: "Dedicated"</code> for resource-specific tables</li>
+  <li>Include proper role definitions for the managed identity (Monitoring Contributor + Log Analytics Contributor)</li>
+  <li>Use the <code>allLogs</code> category group for comprehensive log streaming</li>
+</ul>
+
+<p>Manually writing 38 nearly-identical-but-slightly-different policies would take days. The differences are subtle since each resource type has different diagnostic log categories, some support metrics, and the resource type strings and API versions all vary.</p>
+
+<p>By providing Claude with the ARM resource provider schemas and one reference policy, it generated all 38 policies plus a 1,068-line initiative definition bundling them together with per-resource effect parameters.</p>
+
+<h1>Validation</h1>
+
+<p>AI gets you 90% there fast. The remaining 10% is validation:</p>
+
+<ol>
+  <li><strong>Schema validation</strong>: Running the EPAC framework's built-in validation against the policy definition schema</li>
+  <li><strong>Alias verification</strong>: Confirming each policy alias actually exists in the ARM resource provider using <code>Get-AzPolicyAlias</code></li>
+  <li><strong>Deployment testing</strong>: Deploying to a test subscription with <code>enforcementMode: DoNotEnforce</code> to verify compliance evaluation works correctly</li>
+  <li><strong>Effect testing</strong>: Switching to <code>Deny</code> mode and confirming non-compliant resources are actually blocked</li>
+  <li><strong>Policy remediation</strong>: Running remediation tasks for the DeployIfNotExists policies to verify that non-compliant resources are correctly brought into compliance</li>
+</ol>
+
+<p>We caught a few issues during validation. Claude didn't always parse the ARM schema correctly and would sometimes guess policy aliases rather than derive them from the documentation. Once we pointed out the correct aliases, the fixes were quick, but it's a good reminder to always verify with <code>Get-AzPolicyAlias</code> before deploying.</p>
+
+<h1>Time Saved</h1>
+
+<p>Let's estimate our time savings:</p>
+
+<table style="width:100%;border-collapse:collapse;margin:1.5rem 0;">
+  <thead>
+    <tr style="border-bottom:2px solid var(--border);">
+      <th style="text-align:left;padding:0.75rem;color:var(--text-secondary);">Task</th>
+      <th style="text-align:center;padding:0.75rem;color:var(--text-secondary);">Manual</th>
+      <th style="text-align:center;padding:0.75rem;color:var(--text-secondary);">With Claude</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:0.75rem;">7 MySQL policies + initiative</td>
+      <td style="text-align:center;padding:0.75rem;">1&ndash;2 days</td>
+      <td style="text-align:center;padding:0.75rem;color:var(--success);font-weight:600;">~10 minutes</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:0.75rem;">38 diagnostic policies + initiative</td>
+      <td style="text-align:center;padding:0.75rem;">3&ndash;5 days</td>
+      <td style="text-align:center;padding:0.75rem;color:var(--success);font-weight:600;">~30 minutes</td>
+    </tr>
+    <tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:0.75rem;">Assignments + non-compliance messages</td>
+      <td style="text-align:center;padding:0.75rem;">0.5&ndash;1 day</td>
+      <td style="text-align:center;padding:0.75rem;color:var(--success);font-weight:600;">~10 minutes</td>
+    </tr>
+    <tr>
+      <td style="padding:0.75rem;font-weight:600;">Validation &amp; fixes</td>
+      <td style="text-align:center;padding:0.75rem;">-</td>
+      <td style="text-align:center;padding:0.75rem;">~1 hour</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>What would have been a <strong>full week of work</strong> was completed in about <strong>2 hours</strong>, including validation.</p>
+
+<h1>Key Takeaways</h1>
+
+<ol>
+  <li><strong>Context is everything</strong>. Don't just ask for "an Azure Policy." Provide the ARM schema, existing examples, and your specific naming conventions. The output quality is directly proportional to the input quality.</li>
+  <li><strong>AI is a force multiplier, not a replacement</strong>. You still need to understand Azure Policy, know what you're looking for, and validate the output. The skill shifts from writing JSON to reviewing and validating it.</li>
+  <li><strong>Repetitive patterns are the sweet spot</strong>. The 38 diagnostic policies were nearly identical in structure. This is where AI truly shines, generating variations of a known pattern across many resource types.</li>
+  <li><strong>Always verify aliases</strong>. AI can hallucinate property paths. Always verify policy aliases exist with <code>Get-AzPolicyAlias</code> before deploying.</li>
+</ol>
+
+<p>If you're managing Azure Policy at scale, I strongly recommend giving this workflow a try. The combination of EPAC for lifecycle management and AI for policy generation is a massive productivity boost.</p>
+
+<p>//Sebastian</p>
+
+          </div>
+          <aside class="toc">
+            <div class="toc-title">On this page</div>
+            <ul>
+              <li><a href="#">The Problem</a></li>
+              <li><a href="#">The Approach</a></li>
+              <li><a href="#">MySQL policies</a></li>
+              <li><a href="#">Diagnostic policies</a></li>
+              <li><a href="#">Validation</a></li>
+              <li><a href="#">Time Saved</a></li>
+              <li><a href="#">Key Takeaways</a></li>
+            </ul>
+          </aside>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>&copy; 2026 Sebastian Claesson</span>
+      <a href="../index.html">&larr; Back to all posts</a>
+    </div>
+  </footer>
+
+  <button class="back-to-top" aria-label="Back to top"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg></button>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>

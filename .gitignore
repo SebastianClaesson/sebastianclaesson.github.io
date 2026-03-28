@@ -1,20 +1,11 @@
-# hidden files
-.*
-!.git*
-!.editorconfig
-!.nojekyll
-!.travis.yml
-!.husky
-!.commitlintrc.json
-!.versionrc.json
-Gemfile.lock
-# bundler cache
-_site
-vendor
+# Claude Code
+.claude/
 
-# rubygem
-*.gem
+# OS files
+.DS_Store
+Thumbs.db
 
-# npm dependencies
-node_modules
-package-lock.json
+# Editor
+*.swp
+*.swo
+*~

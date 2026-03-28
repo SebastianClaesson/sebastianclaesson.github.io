@@ -1,4 +1,327 @@
----
-layout: home
-# Index page
----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sebastian Claesson - Techblog</title>
+  <meta name="description" content="A techblog about Azure, PowerShell, automation and IT security - written for IT pros and architects by Sebastian Claesson.">
+  <meta name="author" content="Sebastian Claesson">
+  <link rel="canonical" href="https://blog.sebastianclaesson.se/">
+  <meta property="og:title" content="Sebastian Claesson - Techblog">
+  <meta property="og:description" content="A techblog about Azure, PowerShell, automation and IT security.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://blog.sebastianclaesson.se/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@SebClaesson">
+  <link rel="icon" href="assets/images/Sebastian-Avatar-Hoodie.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQDR23C4VN"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-LQDR23C4VN');
+  </script>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="site-logo">
+        <img src="assets/images/Sebastian-Avatar-Hoodie.png" alt="" style="width:32px;height:32px;border-radius:8px;object-fit:cover;">
+        Sebastian Claesson
+      </a>
+
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+
+      <nav class="nav-menu">
+        <ul class="nav-links">
+          <li><a href="index.html" class="active">Blog</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+        <div class="nav-social">
+          <a href="https://github.com/SebastianClaesson" target="_blank" rel="noopener" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/in/sebastianclaesson" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="https://twitter.com/SebClaesson" target="_blank" rel="noopener" aria-label="Twitter/X">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+                  <button class="theme-toggle" aria-label="Toggle theme"><svg class="icon-sun" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg><svg class="icon-moon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></button>n      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+
+      <!-- Hero -->
+      <section class="hero">
+        <h1>Techblog</h1>
+        <p class="tagline">Notes and deep-dives on Azure, PowerShell, automation and IT security, written for IT pros & architects.</p>
+        <div class="hero-tags">
+          <span class="hero-tag">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 002 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0022 16z"/></svg>
+            Azure
+          </span>
+          <span class="hero-tag">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+            PowerShell
+          </span>
+          <span class="hero-tag">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Security
+          </span>
+          <span class="hero-tag">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+            Automation
+          </span>
+        </div>
+      </section>
+
+      <!-- Search & Filter -->
+      <div class="search-filter">
+        <div class="search-box">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" id="search-input" placeholder="Search posts..." autocomplete="off">
+        </div>
+        <div class="category-filters" id="category-filters">
+          <button class="cat-btn active" data-category="all">All</button>
+          <button class="cat-btn" data-category="Azure">Azure</button>
+          <button class="cat-btn" data-category="Azure DevOps">Azure DevOps</button>
+          <button class="cat-btn" data-category="Security">Security</button>
+          <button class="cat-btn" data-category="PowerShell">PowerShell</button>
+          <button class="cat-btn" data-category="Community">Community</button>
+        </div>
+      </div>
+
+      <div id="no-results" style="display:none;text-align:center;padding:3rem 0;color:var(--text-muted);">
+        No posts found matching your search.
+      </div>
+
+      <!-- Posts -->
+      <section class="posts-grid" id="posts-grid">
+
+        <a href="posts/uppsala-azure-user-group.html" class="post-card" data-categories="Community,Azure">
+          <div class="post-card-meta">
+            <span class="post-card-date">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Mar 28, 2026
+            </span>
+            <span class="post-card-category">Community</span>
+          </div>
+          <h2>Starting the Uppsala Azure User Group</h2>
+          <p>We finally did it - launching UAUG together with Björn Sundling. A free community for Azure enthusiasts in Uppsala.</p>
+          <div class="post-card-tags">
+            <span>azure</span>
+            <span>community</span>
+            <span>uppsala</span>
+            <span>meetup</span>
+          </div>
+        </a>
+
+        <a href="posts/azure-policy-generation-with-claude.html" class="post-card" data-categories="Azure,Security,PowerShell">
+          <div class="post-card-meta">
+            <span class="post-card-date">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Mar 13, 2026
+            </span>
+            <span class="post-card-category">Azure Policy</span>
+          </div>
+          <h2>Generating Azure Policies with Claude AI</h2>
+          <p>How I used Claude AI to generate custom Azure Policies for MySQL Flexible Server and 38 resource-specific diagnostic settings - turning a week of work into 2 hours.</p>
+          <div class="post-card-tags">
+            <span>azure-policy</span>
+            <span>ai</span>
+            <span>mysql</span>
+            <span>epac</span>
+          </div>
+        </a>
+
+        <a href="posts/maester-azure-devops-tests.html" class="post-card" data-categories="Security,Azure DevOps,Azure,PowerShell">
+          <div class="post-card-meta">
+            <span class="post-card-date">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Jan 15, 2026
+            </span>
+            <span class="post-card-category">Security</span>
+          </div>
+          <h2>Contributing Azure DevOps Security Tests to Maester</h2>
+          <p>Building 37 Azure DevOps security tests for Maester - covering authentication, pipeline security, token management and audit logging.</p>
+          <div class="post-card-tags">
+            <span>maester</span>
+            <span>azure-devops</span>
+            <span>security</span>
+            <span>open-source</span>
+          </div>
+        </a>
+
+        <!-- Published posts -->
+        <a href="posts/nordic-integration-summit.html" class="post-card" data-categories="Azure,Community">
+          <div class="post-card-meta">
+            <span class="post-card-date">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Oct 24, 2024
+            </span>
+            <span class="post-card-category">Public Speaking</span>
+          </div>
+          <h2>Nordic Integration Summit</h2>
+          <p>First public session that I have held! Attended NIS24 and ended up presenting our Subscription Vending work on short notice.</p>
+          <div class="post-card-tags">
+            <span>azure</span>
+            <span>speaking</span>
+            <span>nis24</span>
+          </div>
+        </a>
+
+        <a href="posts/subscription-vending.html" class="post-card" data-categories="Azure,PowerShell,Azure DevOps">
+          <div class="post-card-meta">
+            <span class="post-card-date">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Oct 6, 2024
+            </span>
+            <span class="post-card-category">Subscription Vending</span>
+          </div>
+          <h2>Subscription Vending</h2>
+          <p>Guide for Azure Landing Zones subscription vending - setting up EA role assignments, workload identities and Azure DevOps automation.</p>
+          <div class="post-card-tags">
+            <span>azure</span>
+            <span>powershell</span>
+            <span>landing-zone</span>
+            <span>automation</span>
+          </div>
+        </a>
+
+        <a href="posts/azure-billing-role-assignment.html" class="post-card" data-categories="Azure,PowerShell,Azure DevOps">
+          <div class="post-card-meta">
+            <span class="post-card-date">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Apr 30, 2024
+            </span>
+            <span class="post-card-category">Azure Billing</span>
+          </div>
+          <h2>Azure Billing Role Assignments</h2>
+          <p>PowerShell tooling for managing Azure EA billing role assignments using the preview billing APIs for subscription vending automation.</p>
+          <div class="post-card-tags">
+            <span>azure</span>
+            <span>powershell</span>
+            <span>billing</span>
+          </div>
+        </a>
+
+        <a href="posts/azure-policy-tear-down.html" class="post-card" data-categories="Azure,Security">
+          <div class="post-card-meta">
+            <span class="post-card-date">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Apr 4, 2023
+            </span>
+            <span class="post-card-category">Security</span>
+          </div>
+          <h2>Azure Policy to Tear Down Environments</h2>
+          <p>What happens when Azure Policy is misconfigured with malicious intent? Exploring DeployIfNotExists in Complete mode and other attack scenarios.</p>
+          <div class="post-card-tags">
+            <span>azure</span>
+            <span>policy</span>
+            <span>security</span>
+          </div>
+        </a>
+
+        <a href="posts/azure-cross-tenant-collaboration.html" class="post-card" data-categories="Azure,Security,PowerShell">
+          <div class="post-card-meta">
+            <span class="post-card-date">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Apr 3, 2023
+            </span>
+            <span class="post-card-category">Cross-tenant</span>
+          </div>
+          <h2>Azure AD Cross-tenant Collaboration / VNET Peering</h2>
+          <p>Setting up and detecting cross-tenant virtual network peerings, B2B collaboration, and how to protect your organization.</p>
+          <div class="post-card-tags">
+            <span>azure</span>
+            <span>powershell</span>
+            <span>networking</span>
+            <span>b2b</span>
+          </div>
+        </a>
+
+        <a href="posts/azure-devops-extension-linux.html" class="post-card" data-categories="Azure DevOps,Azure,Security">
+          <div class="post-card-meta">
+            <span class="post-card-date">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Nov 8, 2022
+            </span>
+            <span class="post-card-category">Azure DevOps</span>
+          </div>
+          <h2>Azure DevOps Pipeline Agent Extension (Ubuntu) - Behind a Web Proxy</h2>
+          <p>Deep-dive into making the Azure DevOps VM Extension work behind an unauthenticated web proxy on Ubuntu, including the extension internals.</p>
+          <div class="post-card-tags">
+            <span>azure-devops</span>
+            <span>proxy</span>
+            <span>ubuntu</span>
+            <span>vmss</span>
+          </div>
+        </a>
+
+        <a href="posts/azure-devops-colored-output.html" class="post-card" data-categories="Azure DevOps,PowerShell">
+          <div class="post-card-meta">
+            <span class="post-card-date">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Sep 3, 2022
+            </span>
+            <span class="post-card-category">Azure DevOps</span>
+          </div>
+          <h2>Azure DevOps Pipeline Output - Colored with ANSI</h2>
+          <p>How to produce colored output in Azure DevOps pipelines using ANSI escape codes for human-readable what-if deployments.</p>
+          <div class="post-card-tags">
+            <span>azure-devops</span>
+            <span>powershell</span>
+            <span>ansi</span>
+          </div>
+        </a>
+
+        <a href="posts/azure-functions.html" class="post-card" data-categories="Azure,PowerShell">
+          <div class="post-card-meta">
+            <span class="post-card-date">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Aug 11, 2022
+            </span>
+            <span class="post-card-category">Function App</span>
+          </div>
+          <h2>PowerShell Azure Function - Managed Identity & Triggers/Bindings</h2>
+          <p>Building Azure Functions with PowerShell using managed identity, storage queue triggers and SendGrid output bindings.</p>
+          <div class="post-card-tags">
+            <span>azure</span>
+            <span>powershell</span>
+            <span>functions</span>
+            <span>managed-identity</span>
+          </div>
+        </a>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>&copy; 2026 Sebastian Claesson</span>
+      
+    </div>
+  </footer>
+
+  <!-- Back to top -->
+  <button class="back-to-top" aria-label="Back to top">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
