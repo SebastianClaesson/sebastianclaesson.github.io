@@ -246,6 +246,8 @@ bicep local-deploy './netbox.bicepparam'</code></pre>
 
 <p>Deploy an Azure resource, grab the output, feed it into NetBox. Two commands and your source of truth is up to date. This is the kind of workflow that makes keeping NetBox in sync with your actual infrastructure realistic instead of something that falls behind after week one.</p>
 
+<p><strong>A note on scopes:</strong> you might be wondering why this requires two separate files and a script instead of just using Bicep modules. The reason is that <code>targetScope = 'local'</code> (used by extensions) and <code>targetScope = 'resourceGroup'</code> (used for Azure deployments) are completely different execution paths. Local deploy runs outside of ARM entirely, so you cannot mix Azure resources and extension resources in the same file, and you cannot call one scope from the other using modules. This is a Bicep platform limitation today. A CI/CD pipeline or a simple script is the natural place to tie the two steps together.</p>
+
 <h1>How It Works Under the Hood</h1>
 <p>The extension is a .NET 9 application that uses Microsoft's <code>Azure.Bicep.Local.Extension</code> SDK. Each of the 57 resource types gets a handler class. Most of them are surprisingly small because they inherit from a base class that handles all the HTTP logic, authentication, and create or update flow.</p>
 
