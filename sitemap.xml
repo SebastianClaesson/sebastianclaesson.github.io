@@ -11,6 +11,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://blog.sebastianclaesson.se/posts/netbox-bicep-extension/</loc>
+    <lastmod>2026-03-29</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://blog.sebastianclaesson.se/posts/nordic-integration-summit/</loc>
     <lastmod>2024-10-24</lastmod>
     <priority>0.7</priority>
