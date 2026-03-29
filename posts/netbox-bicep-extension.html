@@ -185,6 +185,67 @@ bicep local-deploy main.bicepparam</code></pre>
 │ gateway      │ 0,5s     │ Succeeded │
 ╰──────────────┴──────────┴───────────╯</code></pre>
 
+<h1>Azure Integration: From Cloud to NetBox</h1>
+<p>One thing I really wanted to show is how this fits into an Azure workflow. Say you deploy a public IP address in Azure and you want that IP tracked in NetBox automatically. Since the NetBox extension uses <code>targetScope = 'local'</code> and Azure deployments use <code>targetScope = 'resourceGroup'</code>, you cannot mix them in a single Bicep file. But a simple two step workflow does the trick.</p>
+
+<p>First, a regular Azure Bicep file that creates the public IP:</p>
+
+<pre><code class="language-bicep">targetScope = 'resourceGroup'
+
+param location string = resourceGroup().location
+
+resource publicIp 'Microsoft.Network/publicIPAddresses@2024-05-01' = {
+  name: 'pip-netbox-demo'
+  location: location
+  sku: {
+    name: 'Standard'
+  }
+  properties: {
+    publicIPAllocationMethod: 'Static'
+  }
+}
+
+output ipAddress string = publicIp.properties.ipAddress</code></pre>
+
+<p>Then a NetBox Bicep file that registers that IP:</p>
+
+<pre><code class="language-bicep">targetScope = 'local'
+
+@secure()
+param netboxToken string
+param netboxUrl string
+param azurePublicIp string
+
+extension netbox with {
+  url: netboxUrl
+  token: netboxToken
+}
+
+resource ipAddress 'IPAddress' = {
+  address: azurePublicIp
+  status: 'active'
+  description: 'Azure Public IP - registered via Bicep extension'
+  dnsName: 'pip-netbox-demo.northeurope.cloudapp.azure.com'
+}</code></pre>
+
+<p>Tie them together in a script:</p>
+
+<pre><code class="language-powershell"># Step 1: Deploy to Azure and capture the IP
+$ip = az deployment group create `
+    --resource-group 'rg-netbox-demo' `
+    --template-file './azure.bicep' `
+    --query 'properties.outputs.ipAddress.value' `
+    --output tsv
+
+# Step 2: Register it in NetBox
+$env:NETBOX_URL      = 'https://netbox.contoso.com'
+$env:NETBOX_TOKEN    = 'nbt_your-token-here'
+$env:AZURE_PUBLIC_IP = "$ip/32"
+
+bicep local-deploy './netbox.bicepparam'</code></pre>
+
+<p>Deploy an Azure resource, grab the output, feed it into NetBox. Two commands and your source of truth is up to date. This is the kind of workflow that makes keeping NetBox in sync with your actual infrastructure realistic instead of something that falls behind after week one.</p>
+
 <h1>How It Works Under the Hood</h1>
 <p>The extension is a .NET 9 application that uses Microsoft's <code>Azure.Bicep.Local.Extension</code> SDK. Each of the 57 resource types gets a handler class. Most of them are surprisingly small because they inherit from a base class that handles all the HTTP logic, authentication, and create or update flow.</p>
 
