@@ -81,9 +81,11 @@
 <p>I have been thinking about this for a while. We already treat our Azure infrastructure as code with Bicep. Why not do the same for NetBox? Declare your sites, prefixes, VLANs in a Bicep file, run a deploy, and let the tooling figure out whether to create or update each resource.</p>
 
 <h1>Inspiration</h1>
-<p>The thing that actually made me go from "this would be cool" to "let me build this" was discovering <a href="https://www.linkedin.com/in/antmarti/" target="_blank" rel="noopener">Anthony Martin's</a> work on Bicep extensibility. Anthony is one of the people behind the Bicep compiler itself, and he built proof of concept extensions for <a href="https://github.com/anthony-c-martin/bicep-ext-github" target="_blank" rel="noopener">GitHub</a> and <a href="https://github.com/anthony-c-martin/bicep-ext-keyvault" target="_blank" rel="noopener">Azure Key Vault</a> that show how you can use Bicep's local deploy feature to talk to any API, not just Azure Resource Manager.</p>
+<p>The thing that actually made me go from "this would be cool" to "I should try this" was discovering <a href="https://www.linkedin.com/in/antmarti/" target="_blank" rel="noopener">Anthony Martin's</a> work on Bicep extensibility. Anthony is one of the people behind the Bicep compiler itself, and he built proof of concept extensions for <a href="https://github.com/anthony-c-martin/bicep-ext-github" target="_blank" rel="noopener">GitHub</a> and <a href="https://github.com/anthony-c-martin/bicep-ext-keyvault" target="_blank" rel="noopener">Azure Key Vault</a> that show how you can use Bicep's local deploy feature to talk to any API, not just Azure Resource Manager.</p>
 
-<p>Looking at his repos, the pattern clicked immediately. You build a small .NET application that implements resource handlers for each type you want to manage. Bicep talks to your extension over gRPC, passes in the desired state, and your handler makes the API calls. You get IntelliSense in VS Code, resource references between objects, and idempotent deployments. All the things that make Bicep great for Azure, but pointed at a completely different backend.</p>
+<p>Now, I am not a developer. I am an infrastructure person. I can read code well enough to understand what is going on, but sitting down and writing a .NET application from scratch is not something I would do on a weekend. So when I looked at Anthony's repos, my first thought was not "let me code this myself." It was: <strong>what if I feed his patterns and implementation to Claude and have it generate a Bicep extension for NetBox?</strong></p>
+
+<p>That turned out to work really well. Anthony's code is clean and well structured, which made it a great reference for Claude to follow. I could describe what I wanted, point it at the existing extensions as examples, explain how the NetBox API works, and iterate from there. The combination of a solid reference implementation and an AI that understands both the code patterns and the domain made this possible for someone who is not writing C# for a living.</p>
 
 <p>Anthony's work is genuinely impressive and I recommend checking out his repos if you are interested in Bicep extensibility.</p>
 
@@ -160,7 +162,7 @@ resource gateway 'IPAddress' = {
   description: 'Default gateway'
 }</code></pre>
 
-<p>Notice how <code>site</code> references <code>region.id</code> to wire up the relationship. The extension returns the NetBox ID for each created resource, so you can chain dependencies just like you would with Azure resources in a regular Bicep file.</p>
+<p>Notice how we can use references within Bicep to assign relationships. The <code>site</code> gets its region by referencing <code>region.id</code>, just like you would link resources together in a regular Bicep deployment against Azure.</p>
 
 <p>Deploying is a single command:</p>
 
@@ -199,13 +201,13 @@ bicep local-deploy main.bicepparam</code></pre>
 <p>You will need <strong>Bicep CLI v0.32+</strong> with the experimental extensibility and local deploy features enabled. The setup is straightforward:</p>
 
 <ol>
-  <li>Grab the binary for your platform from the <a href="https://github.com/SebastianClaesson/netbox-bicep-extension/releases" target="_blank" rel="noopener">GitHub releases</a> page (or build from source if you prefer)</li>
+  <li>Grab the binary for your platform from the <a href="https://github.com/NetboxTools/netbox-bicep-extension/releases" target="_blank" rel="noopener">GitHub releases</a> page (or build from source if you prefer)</li>
   <li>Package it as a Bicep extension using <code>bicep publish-extension</code></li>
   <li>Point your <code>bicepconfig.json</code> at the packaged extension</li>
   <li>Write your Bicep files and deploy with <code>bicep local-deploy</code></li>
 </ol>
 
-<p>The <a href="https://github.com/SebastianClaesson/netbox-bicep-extension" target="_blank" rel="noopener">repository</a> has sample templates for different scenarios: a basic single site setup, a full datacenter with multiple regions, IPAM configurations, virtualization clusters, and more.</p>
+<p>The <a href="https://github.com/NetboxTools/netbox-bicep-extension" target="_blank" rel="noopener">repository</a> has sample templates for different scenarios: a basic single site setup, a full datacenter with multiple regions, IPAM configurations, virtualization clusters, and more.</p>
 
 <h1>What is Next</h1>
 <p>There are a few things I want to tackle next:</p>
